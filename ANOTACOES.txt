@@ -1,0 +1,5 @@
+Como colocar grafico:
+
+react-google-charts
+
+cria uma lista [nome,nota] com as colunas
