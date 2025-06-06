@@ -14,4 +14,26 @@ class SerializandoSensor():
         model = Sensores
         fields = ['sensor','mac_address','unidade_med','latitude','longitude','status']
 
-    
+        def validate(self,data):
+            if( data['sensor'] == 'Temperatura' and data['unidade_med'] == '%'):
+                raise serializers.ValidationError('O sensor de Temperatura não pode ter a unidade de medida "%" ')
+            elif(data['sensor'] == 'Umidade' and data['unidade_med'] == 'ºC'):
+                raise serializers.ValidationError('O sensor de Umiadade não pode ter a unidade de medida ºC')
+            else:
+                return data
+            
+
+class SerializandoAmbiente(serializers.ModelSerializer):
+    class Meta:
+        model=Sensores
+        fields = ['sensor','mac_address','unidade_med','latitude','longitude','status']
+
+
+
+
+
+            
+
+                 
+
+
