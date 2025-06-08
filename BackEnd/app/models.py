@@ -20,18 +20,19 @@ class Sensores(models.Model):
 
 
 class Ambientes(models.Model):
-    sig = models.IntegerField() # numero de identificação da sala
+    sig = models.IntegerField() # identificação da sala
     descricao = models.CharField()
-    ni = models.CharField() # numero de identificação do responsavel
+    ni = models.CharField() # identificação do responsavel
     responsavel = models.CharField()
 
 
 class Historico(models.Model):
     sensor = models.ForeignKey(Sensores,on_delete=models.CASCADE,blank=False,null=False)
     ambientes = models.ForeignKey(Ambientes,on_delete=models.CASCADE,blank=False,null=False)
-    Valor = models.FloatField()
+    valor = models.FloatField()
     timestamp = models.IntegerField()
 
-# fazer url importando tokenPairView
+
+
 
 
