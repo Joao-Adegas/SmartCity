@@ -19,5 +19,6 @@ urlpatterns = [
     path('historico/<int:pk>',view=views.HistoricoRetriveUpdateDestroyView.as_view(),name='updateDeleteHistorico'),
 
     path('ler-excel-local/', view=views.ImportarSensoresView.as_view(), name='ler-excel-local'),
-    path('importar-exel-ambientes/', view=views.ImportarAmbienteView.as_view(), name='importar-ambientes')
+    path('importar-exel-ambientes/', view=views.ImportarAmbienteView.as_view(), name='importar-ambientes'),
+    path('importar-exel-historico/', view=views.ImportarHistoricoView.as_view(), name='importar-historico'),
 ]
