@@ -123,5 +123,39 @@ class ImportarSensoresView(APIView):
         return Response({"mensagem": "Dados importados com sucesso!"}, status=status.HTTP_201_CREATED)
 
 
+class ImportarAmbienteView(APIView):
+    def post(self, request):
+        pasta_arquivos = os.path.join(settings.BASE_DIR, "..", "Dados Integrador")
+        arquivos = ['ambientes.xlsx']  # lista de arquivos para importar
+        erros = []
+
+        for arquivo in arquivos:
+            caminho_arquivo = os.path.join(pasta_arquivos, arquivo)
+
+            if not os.path.exists(caminho_arquivo):
+                erros.append(f"Arquivo {arquivo} não encontrado.")
+                continue
+
+            try:
+                df = pd.read_excel(caminho_arquivo)
+
+                campos_esperados = {"sig", "descricao", "ni", "responsavel"}
+                if not campos_esperados.issubset(df.columns):
+                    raise ValueError("Arquivo não contém todas as colunas esperadas.")
+
+                for _, linha in df.iterrows():
+                    Ambientes.objects.create(
+                        sig=linha.get("sig"),
+                        descricao=linha.get("descricao"),
+                        ni=linha.get("ni"),
+                        responsavel=linha.get("responsavel")
+                    )
+            except Exception as e:
+                erros.append(f"Erro ao importar {arquivo}: {str(e)}")
+
+        if erros:
+            return Response({"mensagem": "Importação concluída com erros", "erros": erros}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({"mensagem": "Dados importados com sucesso!"}, status=status.HTTP_201_CREATED)
 
 
