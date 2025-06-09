@@ -3,20 +3,32 @@ from django.db import models
 
 
 class Sensores(models.Model):
-    sensor = models.CharField(max_length=11,choices=(
+    sensor = models.CharField(max_length=12,choices=(
         ('Temperatura','Temperatura'),
-        ('Umidade','Umidade')
+        ('Umidade','Umidade'),
+        ('Luminosidade','Luminosidade'),
+        ('Contador','Contador')
         # minimo deveria ser 8 caracteres
     ))
 
     mac_address = models.CharField(max_length=20)
-    unidade_med = models.CharField(max_length=2,choices=(
+    unidade_med = models.CharField(max_length=3,blank=False,null=False,choices=(
         ('°C','°C'),
-        ('%','%')
+        ('%','%'),
+        ('lux','lux'),
+        ('uni','uni')
     ))
     latitude = models.FloatField(max_length=20)
     longitude = models.FloatField(max_length=20)
     status = models.BooleanField()
+
+    def save(self, *args, **kwargs):
+        if isinstance(self.status, str):  # Se for string, converte
+            self.status = self.status.strip().lower() == "ativo"
+        super().save(*args, **kwargs)
+
+    def get_status_display(self):
+        return "ativo" if self.status else "inativo"
 
 
 class Ambientes(models.Model):

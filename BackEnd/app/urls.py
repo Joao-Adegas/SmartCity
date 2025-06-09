@@ -8,4 +8,15 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 
 urlpatterns = [
     path('token/', TokenObtainPairView.as_view() ,name='token'),
+
+    path('sensor/',view=views.SensoresListCreateView.as_view(),name='createListSensor'),
+    path('sensor/<int:pk>',view=views.SensoresRetriveUpdateDestroyView.as_view(),name='updateDeleteSensor'),
+    
+    path('ambiente/',view=views.AmbienteListCreateView.as_view(),name='createListAmbiente'),
+    path('ambiente/<int:pk>',view=views.AmbienteListCreateView.as_view(),name='updateDeleteAmbiente'),
+
+    path('historico/',view=views.HistoricoListCreateView.as_view(),name='createListHistorico'),
+    path('historico/<int:pk>',view=views.HistoricoRetriveUpdateDestroyView.as_view(),name='updateDeleteHistorico'),
+
+    path('ler-excel-local/', view=views.ImportarSensoresView.as_view(), name='ler-excel-local'),
 ]

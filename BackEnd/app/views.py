@@ -1,20 +1,22 @@
-from django.shortcuts import render
-
-# Create your views here.
 from .models import Ambientes,Historico,Sensores
-from .serializers import SerializandoAmbiente,SerializandoHistorico,SerializandoSensor,SerializandoLogin
+from .serializers import SerializandoAmbiente,SerializandoHistorico,SerializandoSensor
+
+import os
+import pandas as pd
+
+from django.conf import settings
 
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.generics import ListCreateAPIView,RetrieveDestroyAPIView
+from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.exceptions import ValidationError
 
-from rest_framework_simplejwt.views import TokenObtainPairView
+
 
 # Sensores
 
-class SesnroresListCreateView(ListCreateAPIView):
+class SensoresListCreateView(ListCreateAPIView):
     queryset = Sensores.objects.all()
     serializer_class = SerializandoSensor
     permission_classes = [IsAuthenticated]
@@ -67,7 +69,59 @@ class HistoricoRetriveUpdateDestroyView(RetrieveDestroyAPIView):
 
     def perform_destroy(self, instance):
         return instance.detele()
-    
 
-# class LoginView(TokenObtainPairView):
-#     serializer_class = SerializandoLogin
+# Dados Exel
+class ImportarSensoresView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        pasta_arquivos = os.path.join(settings.BASE_DIR, "..","Dados Integrador") # ".." porque a pasta "Dados Integrador" esta fora da pasta do app
+
+        arquivos = {
+            "Temperatura": "temperatura.xlsx",
+            "Umidade": "umidade.xlsx",
+            "Luminosidade":"luminosidade.xlsx",
+            "Contador":"contador.xlsx",
+        }
+
+        erros = []
+
+        for sensor_tipo, arquivo in arquivos.items():
+            caminho_arquivo = os.path.join(pasta_arquivos, arquivo)
+
+            if not os.path.exists(caminho_arquivo):
+                erros.append(f"Arquivo não encontrado: {arquivo}")
+                continue
+
+            try:
+                df = pd.read_excel(caminho_arquivo)
+
+                for _, linha in df.iterrows():
+
+                    status_value = linha.get("status")
+                    status_str = str(status_value).strip().lower()
+
+                    if(status_str in ['1','True','ativo']):
+                        status_text = 'ativo'
+                    else:
+                        status_text='inativo'
+                    
+                    Sensores.objects.create(
+                        sensor=sensor_tipo,
+                        mac_address=linha.get("mac_address"),
+                        unidade_med=linha.get("unidade_medida"),
+                        latitude=linha.get("latitude"),
+                        longitude=linha.get("longitude"),
+                        status=status_text
+                    )
+            except Exception as e:
+                erros.append(f"Erro ao importar {arquivo}: {str(e)}")
+
+        if erros:
+            return Response({"mensagem": "Importação concluída com erros", "erros": erros}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({"mensagem": "Dados importados com sucesso!"}, status=status.HTTP_201_CREATED)
+
+
+
+
