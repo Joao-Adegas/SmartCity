@@ -14,23 +14,25 @@ class SerializandoSensor(serializers.ModelSerializer):
         fields = ['sensor','mac_address','unidade_med','latitude','longitude','status']
 
     # validação se o os dados inseridos estão na formatação correta
-    def validate(self,data):
-
+    def validate(self, data):
         if(data['sensor'] == 'Temperatura' and data['unidade_med'] != '°C'):
-            raise serializers.ValidationError('O sensor de Temperatura não pode ter a unidade de medida diferente de °C ')
-        
+            raise serializers.ValidationError('O sensor de temperatura não pode ser diferente de °C.')
+
         elif(data['sensor'] == 'Umidade' and data['unidade_med'] != '%'):
-            raise serializers.ValidationError('O sensor de Umiadade não pode ter a unidade de medida diferente de %')
-        
+            raise serializers.ValidationError('O sensor de umidade não pode ser diferente de %.')
+
         elif(data['sensor'] == 'Luminosidade' and data['unidade_med'] != 'lux'):
-            raise serializers.ValidationError('O sensor de Luminosidade não pode ter a unidade de medida diferente de lux')
-        
+            raise serializers.ValidationError('O sensor de luminosidade não pode ser diferente de lux.')
+
         elif(data['sensor'] == 'Contador' and data['unidade_med'] != 'uni'):
-            raise serializers.ValidationError('O sensor de Contagem não pode ter a unidade de medida diferente de uni')
-        
+            raise serializers.ValidationError('O sensor de contagem não pode ser diferente de uni.')
+
+        elif(data['sensor'] != 'Temperatura' and data['sensor'] != 'Umidade' and data['sensor'] != 'Luminosidade'  and data['sensor'] != 'Contador'):
+            raise serializers.ValidationError('Não pode ter sensor diferente de  Temperatura, Umidade, Luminosidade e Contador ')
+
         elif not(re.match (r"^([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$",data.get('mac_address','') ) ):
             raise serializers.ValidationError('O endereço deve estar no formato correto')
-        
+
         return data
     
     def status_texto(self):
