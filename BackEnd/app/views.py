@@ -3,14 +3,17 @@ from .serializers import SerializandoAmbiente,SerializandoHistorico,Serializando
 
 import os
 import pandas as pd
+from io import BytesIO
 
 from django.conf import settings
+from django.http import HttpResponse
 
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.generics import ListCreateAPIView,RetrieveDestroyAPIView
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import MultiPartParser, FormParser
 
 
 
@@ -70,7 +73,86 @@ class HistoricoRetriveUpdateDestroyView(RetrieveDestroyAPIView):
     def perform_destroy(self, instance):
         return instance.detele()
 
-# Dados Exel
+# Dados Excel
+class ExportarSensoresView(APIView):
+
+    def get(self, request):
+        tipos_sensores = ["Temperatura", "Umidade", "Luminosidade", "Contador"]
+        sensores_completos = []
+
+        # Busca todos os sensores de todos os tipos
+        for tipo in tipos_sensores:
+            sensores = Sensores.objects.filter(sensor__iexact=tipo)
+            if sensores.exists():
+                sensores_list = list(sensores.values(
+                    'sensor',
+                    'mac_address',
+                    'unidade_med',
+                    'latitude',
+                    'longitude',
+                    'status'
+                ))
+
+                # Converte os status para 'ativo' ou 'inativo'
+                for s in sensores_list:
+                    s['status'] = 'ativo' if s['status'] else 'inativo'
+
+                sensores_completos.extend(sensores_list)  # Adiciona todos os sensores à lista completa
+
+        # Cria um DataFrame com todos os sensores
+        df = pd.DataFrame(sensores_completos, columns=['sensor', 'mac_address', 'unidade_med', 'latitude', 'longitude', 'status'])
+
+        output = BytesIO()
+
+        # Escreve todos os dados em uma única aba
+        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+            df.to_excel(writer, sheet_name='Sensores', index=False)
+
+        output.seek(0)
+        response = HttpResponse(
+            output,
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
+        response['Content-Disposition'] = 'attachment; filename="sensores_exportados.xlsx"'
+        return response
+
+class ExportarSensoresSeparadamenteView(APIView):
+
+    def get(self, request):
+        tipos_sensores = ["Temperatura", "Umidade", "Luminosidade", "Contador"]
+        output = BytesIO()
+
+        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+            for tipo in tipos_sensores:
+                sensores = Sensores.objects.filter(sensor__iexact=tipo)
+                if sensores.exists():
+                    sensores_list = list(sensores.values(
+                        'sensor',
+                        'mac_address',
+                        'unidade_med',
+                        'latitude',
+                        'longitude',
+                        'status'
+                    ))
+
+                    for s in sensores_list:
+                        s['status'] = 'ativo' if s['status'] else 'inativo'
+
+                    df = pd.DataFrame(sensores_list)
+                    df.to_excel(writer, sheet_name=tipo, index=False)
+                else:
+                    df = pd.DataFrame(columns=['sensor', 'mac_address', 'unidade_med', 'latitude', 'longitude', 'status'])
+                    df.to_excel(writer, sheet_name=tipo, index=False)
+
+        output.seek(0)
+        response = HttpResponse(
+            output,
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
+        response['Content-Disposition'] = 'attachment; filename="sensores_exportados.xlsx"'
+        return response
+
+
 class ImportarSensoresView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -114,6 +196,7 @@ class ImportarSensoresView(APIView):
                         longitude=linha.get("longitude"),
                         status=status_text
                     )
+
             except Exception as e:
                 erros.append(f"Erro ao importar {arquivo}: {str(e)}")
 
@@ -121,6 +204,62 @@ class ImportarSensoresView(APIView):
             return Response({"mensagem": "Importação concluída com erros", "erros": erros}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({"mensagem": "Dados importados com sucesso!"}, status=status.HTTP_201_CREATED)
+
+    # permission_classes = [IsAuthenticated]
+    # parser_classes = [MultiPartParser, FormParser]
+
+    # def post(self, request):
+    #     arquivo = request.FILES.get('arquivo')
+
+    #     if not arquivo:
+    #         return Response({"mensagem": "Nenhum arquivo selecionado"}, status=status.HTTP_400_BAD_REQUEST)
+
+    #     try:
+    #         # Lê o Excel
+    #         df = pd.read_excel(arquivo)
+
+    #         # Normaliza colunas
+    #         df.columns = [col.strip().lower() for col in df.columns]
+
+    #         if df.empty:
+    #             return Response({"mensagem": "Arquivo está vazio"}, status=status.HTTP_400_BAD_REQUEST)
+
+    #         erros = []
+
+    #         for _, linha in df.iterrows():
+    #             sensor_raw = linha.get("sensor")
+
+    #             if not sensor_raw:
+    #                 erros.append("Linha sem tipo de sensor.")
+    #                 continue
+
+    #             sensor_nome = str(sensor_raw).strip().capitalize()
+    #             if sensor_nome not in ['temperatura', 'umidade', 'luminosidade', 'Contador']:
+    #                 erros.append(f"Tipo de sensor inválido: {sensor_nome}")
+    #                 continue
+
+    #             status_str = str(linha.get("status")).strip().lower()
+    #             status_text = 'ativo' if status_str in ['1', 'true', 'ativo'] else 'inativo'
+
+    #             try:
+    #                 Sensores.objects.create(
+    #                     sensor=sensor_nome,
+    #                     mac_address=linha.get("mac_address"),
+    #                     unidade_med=linha.get("unidade_med") or linha.get("unidade_medida"),
+    #                     latitude=linha.get("latitude"),
+    #                     longitude=linha.get("longitude"),
+    #                     status=status_text
+    #                 )
+    #             except Exception as e:
+    #                 erros.append(f"Erro ao salvar linha: {str(e)}")
+
+    #         if erros:
+    #             return Response({"mensagem": "Importação concluída com erros", "erros": erros}, status=status.HTTP_207_MULTI_STATUS)
+
+    #         return Response({"mensagem": "Dados importados com sucesso!"}, status=status.HTTP_201_CREATED)
+
+    #     except Exception as e:
+    #         return Response({"mensagem": "Erro ao importar arquivo", "erro": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ImportarAmbienteView(APIView):

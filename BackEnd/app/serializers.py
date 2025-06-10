@@ -41,8 +41,8 @@ class SerializandoSensor(serializers.ModelSerializer):
 
 class SerializandoAmbiente(serializers.ModelSerializer):
     class Meta:
-        model=Sensores
-        fields = ['sensor','unidade_med','latitude','longitude','status']
+        model=Ambientes
+        fields = ['sig','ni','descricao','responsavel']
         
 class SerializandoHistorico(serializers.ModelSerializer):
     # pega o campo 'sensor' (se refere ao tipo do sensor) da classe Sensores
@@ -51,15 +51,7 @@ class SerializandoHistorico(serializers.ModelSerializer):
         model = Historico
         fields = ['sensor','ambientes','valor','timestamp','sensor_nome']
 
-# class SerializandoLogin(TokenObtainPairSerializer):
-#     def validate(self, attrs):
-#         data = super().validate(attrs)
 
-#         data['usuario'] = {
-#             'username':self.user.username,
-#         }
-
-#         return data
 
 
     

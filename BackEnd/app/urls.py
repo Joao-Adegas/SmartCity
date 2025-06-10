@@ -21,4 +21,6 @@ urlpatterns = [
     path('ler-excel-local/', view=views.ImportarSensoresView.as_view(), name='ler-excel-local'),
     path('importar-exel-ambientes/', view=views.ImportarAmbienteView.as_view(), name='importar-ambientes'),
     path('importar-exel-historico/', view=views.ImportarHistoricoView.as_view(), name='importar-historico'),
+    path('exportar_sensores/',view=views.ExportarSensoresView.as_view(),name='Exportar-sensores'),
+    path('exportar_sensores_separadamente/',view=views.ExportarSensoresSeparadamenteView.as_view(),name='Exportar-sensores'),
 ]
