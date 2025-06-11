@@ -4,10 +4,10 @@ from django.db import models
 
 class Sensores(models.Model):
     sensor = models.CharField(max_length=12,choices=(
-        ('Temperatura','Temperatura'),
-        ('Umidade','Umidade'),
-        ('Luminosidade','Luminosidade'),
-        ('Contador','Contador')
+        ('temperatura','temperatura'),
+        ('umidade','umidade'),
+        ('luminosidade','luminosidade'),
+        ('contador','contador')
         # minimo deveria ser 8 caracteres
     ))
 

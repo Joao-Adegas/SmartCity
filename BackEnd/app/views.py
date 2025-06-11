@@ -154,112 +154,103 @@ class ExportarSensoresSeparadamenteView(APIView):
 
 
 class ImportarSensoresView(APIView):
+    # permission_classes = [IsAuthenticated]
+
+    # def post(self, request):
+    #     pasta_arquivos = os.path.join(settings.BASE_DIR, "..","Dados Integrador") # ".." porque a pasta "Dados Integrador" esta fora da pasta do app
+
+    #     arquivos = {
+    #         "Temperatura": "temperatura.xlsx",
+    #         "Umidade": "umidade.xlsx",
+    #         "Luminosidade":"luminosidade.xlsx",
+    #         "Contador":"contador.xlsx",
+    #     }
+
+    #     erros = []
+
+    #     for sensor_tipo, arquivo in arquivos.items():
+    #         caminho_arquivo = os.path.join(pasta_arquivos, arquivo)
+
+    #         if not os.path.exists(caminho_arquivo):
+    #             erros.append(f"Arquivo não encontrado: {arquivo}")
+    #             continue
+
+    #         try:
+    #             df = pd.read_excel(caminho_arquivo)
+
+    #             for _, linha in df.iterrows():
+
+    #                 status_value = linha.get("status")
+    #                 status_str = str(status_value).strip().lower()
+
+    #                 if(status_str in ['1','True','ativo']):
+    #                     status_text = 'ativo'
+    #                 else:
+    #                     status_text='inativo'
+                    
+    #                 Sensores.objects.create(
+    #                     sensor=sensor_tipo,
+    #                     mac_address=linha.get("mac_address"),
+    #                     unidade_med=linha.get("unidade_medida"),
+    #                     latitude=linha.get("latitude"),
+    #                     longitude=linha.get("longitude"),
+    #                     status=status_text
+    #                 )
+
+    #         except Exception as e:
+    #             erros.append(f"Erro ao importar {arquivo}: {str(e)}")
+
+    #     if erros:
+    #         return Response({"mensagem": "Importação concluída com erros", "erros": erros}, status=status.HTTP_400_BAD_REQUEST)
+
+    #     return Response({"mensagem": "Dados importados com sucesso!"}, status=status.HTTP_201_CREATED)
+
     permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
 
     def post(self, request):
-        pasta_arquivos = os.path.join(settings.BASE_DIR, "..","Dados Integrador") # ".." porque a pasta "Dados Integrador" esta fora da pasta do app
+        arquivo = request.FILES.get('arquivo')
 
-        arquivos = {
-            "Temperatura": "temperatura.xlsx",
-            "Umidade": "umidade.xlsx",
-            "Luminosidade":"luminosidade.xlsx",
-            "Contador":"contador.xlsx",
-        }
+        if not arquivo:
+            return Response({"mensagem": "Nenhum arquivo selecionado"}, status=status.HTTP_400_BAD_REQUEST)
 
-        erros = []
+        try:
+            print("entrou no try")
+            # Lê o Excel
+            df = pd.read_excel(arquivo)
 
-        for sensor_tipo, arquivo in arquivos.items():
-            caminho_arquivo = os.path.join(pasta_arquivos, arquivo)
+            # Normaliza colunas
+            df.columns = [col.strip().lower() for col in df.columns]
 
-            if not os.path.exists(caminho_arquivo):
-                erros.append(f"Arquivo não encontrado: {arquivo}")
-                continue
+            if df.empty:
+                print("indo para o proximo arquivo")
+                return Response({"mensagem": "Arquivo está vazio"}, status=status.HTTP_400_BAD_REQUEST)
+            erros = []
 
-            try:
-                df = pd.read_excel(caminho_arquivo)
+            for _, linha in df.iterrows():
 
-                for _, linha in df.iterrows():
+                status_str = str(linha.get("status")).strip().lower()
+                status_text = 'ativo' if status_str in ['1', 'true', 'ativo'] else 'inativo'
 
-                    status_value = linha.get("status")
-                    status_str = str(status_value).strip().lower()
-
-                    if(status_str in ['1','True','ativo']):
-                        status_text = 'ativo'
-                    else:
-                        status_text='inativo'
-                    
+                try:
                     Sensores.objects.create(
-                        sensor=sensor_tipo,
+                        sensor=linha.get("sensor"),
                         mac_address=linha.get("mac_address"),
                         unidade_med=linha.get("unidade_medida"),
                         latitude=linha.get("latitude"),
                         longitude=linha.get("longitude"),
                         status=status_text
                     )
+                except Exception as e:
+                    erros.append(f"Erro ao salvar linha: {str(e)}")
 
-            except Exception as e:
-                erros.append(f"Erro ao importar {arquivo}: {str(e)}")
+            if erros:
+                return Response({"mensagem": "Importação concluída com erros", "erros": erros}, status=status.HTTP_207_MULTI_STATUS)
 
-        if erros:
-            return Response({"mensagem": "Importação concluída com erros", "erros": erros}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"mensagem": "Dados importados com sucesso!"}, status=status.HTTP_201_CREATED)
 
-        return Response({"mensagem": "Dados importados com sucesso!"}, status=status.HTTP_201_CREATED)
-
-    # permission_classes = [IsAuthenticated]
-    # parser_classes = [MultiPartParser, FormParser]
-
-    # def post(self, request):
-    #     arquivo = request.FILES.get('arquivo')
-
-    #     if not arquivo:
-    #         return Response({"mensagem": "Nenhum arquivo selecionado"}, status=status.HTTP_400_BAD_REQUEST)
-
-    #     try:
-    #         # Lê o Excel
-    #         df = pd.read_excel(arquivo)
-
-    #         # Normaliza colunas
-    #         df.columns = [col.strip().lower() for col in df.columns]
-
-    #         if df.empty:
-    #             return Response({"mensagem": "Arquivo está vazio"}, status=status.HTTP_400_BAD_REQUEST)
-
-    #         erros = []
-
-    #         for _, linha in df.iterrows():
-    #             sensor_raw = linha.get("sensor")
-
-    #             if not sensor_raw:
-    #                 erros.append("Linha sem tipo de sensor.")
-    #                 continue
-
-    #             sensor_nome = str(sensor_raw).strip().capitalize()
-    #             if sensor_nome not in ['temperatura', 'umidade', 'luminosidade', 'Contador']:
-    #                 erros.append(f"Tipo de sensor inválido: {sensor_nome}")
-    #                 continue
-
-    #             status_str = str(linha.get("status")).strip().lower()
-    #             status_text = 'ativo' if status_str in ['1', 'true', 'ativo'] else 'inativo'
-
-    #             try:
-    #                 Sensores.objects.create(
-    #                     sensor=sensor_nome,
-    #                     mac_address=linha.get("mac_address"),
-    #                     unidade_med=linha.get("unidade_med") or linha.get("unidade_medida"),
-    #                     latitude=linha.get("latitude"),
-    #                     longitude=linha.get("longitude"),
-    #                     status=status_text
-    #                 )
-    #             except Exception as e:
-    #                 erros.append(f"Erro ao salvar linha: {str(e)}")
-
-    #         if erros:
-    #             return Response({"mensagem": "Importação concluída com erros", "erros": erros}, status=status.HTTP_207_MULTI_STATUS)
-
-    #         return Response({"mensagem": "Dados importados com sucesso!"}, status=status.HTTP_201_CREATED)
-
-    #     except Exception as e:
-    #         return Response({"mensagem": "Erro ao importar arquivo", "erro": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({"mensagem": "Erro ao importar arquivo", "erro": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ImportarAmbienteView(APIView):
