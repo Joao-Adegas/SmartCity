@@ -46,10 +46,12 @@ class SerializandoAmbiente(serializers.ModelSerializer):
         
 class SerializandoHistorico(serializers.ModelSerializer):
     # pega o campo 'sensor' (se refere ao tipo do sensor) da classe Sensores
-    sensor_nome = serializers.CharField(source='sensor.sensor')
+    sensor_tipo = serializers.CharField(source='sensor.sensor')
+    ambiente_responsavel = serializers.CharField(source='ambientes.responsavel')
+    ambiente_sig = serializers.CharField(source='ambientes.sig')
     class Meta:
         model = Historico
-        fields = ['sensor','ambientes','valor','timestamp','sensor_nome']
+        fields = ['sensor','ambientes','valor','timestamp','sensor_tipo','ambiente_responsavel','ambiente_sig']
 
 
 

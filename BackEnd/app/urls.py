@@ -18,9 +18,11 @@ urlpatterns = [
     path('historico/',view=views.HistoricoListCreateView.as_view(),name='createListHistorico'),
     path('historico/<int:pk>',view=views.HistoricoRetriveUpdateDestroyView.as_view(),name='updateDeleteHistorico'),
 
-    path('ler-excel-local/', view=views.ImportarSensoresView.as_view(), name='ler-excel-local'),
-    path('importar-exel-ambientes/', view=views.ImportarAmbienteView.as_view(), name='importar-ambientes'),
-    path('importar-exel-historico/', view=views.ImportarHistoricoView.as_view(), name='importar-historico'),
+    path('importar_sensores/', view=views.ImportarSensoresView.as_view(), name='ler-excel-local'),
+    path('importar_ambientes/', view=views.ImportarAmbienteView.as_view(), name='importar-ambientes'),
+    path('importar_historico/', view=views.ImportarHistoricoView.as_view(), name='importar-historico'),
+    
     path('exportar_sensores/',view=views.ExportarSensoresView.as_view(),name='Exportar-sensores'),
-    path('exportar_sensores_separadamente/',view=views.ExportarSensoresSeparadamenteView.as_view(),name='Exportar-sensores'),
+    path('exportar_sensores_separadamente/',view=views.ExportarSensoresSeparadamenteView.as_view(),name='Exportar-sensores-seáradamente'),
+    # fazer exportar historico e ambientes
 ]
