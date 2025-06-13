@@ -23,6 +23,8 @@ urlpatterns = [
     path('importar_historico/', view=views.ImportarHistoricoView.as_view(), name='importar-historico'),
     
     path('exportar_sensores/',view=views.ExportarSensoresView.as_view(),name='Exportar-sensores'),
+    path('exportar_ambientes/',view=views.ExportarAmbientesView.as_view(),name='Exportar-ambientes'),
+    path('exportar_historico/',view=views.ExportarHistoricoView.as_view(),name='Exportar-historico'),
     path('exportar_sensores_separadamente/',view=views.ExportarSensoresSeparadamenteView.as_view(),name='Exportar-sensores-seáradamente'),
-    # fazer exportar historico e ambientes
+    
 ]

@@ -4,6 +4,7 @@ from .serializers import SerializandoAmbiente,SerializandoHistorico,Serializando
 import os
 import pandas as pd
 from io import BytesIO
+from datetime import datetime
 
 from django.conf import settings
 from django.http import HttpResponse
@@ -75,15 +76,17 @@ class HistoricoRetriveUpdateDestroyView(RetrieveDestroyAPIView):
 
 # Dados Excel
 class ExportarSensoresView(APIView):
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        tipos_sensores = ["Temperatura", "Umidade", "Luminosidade", "Contador"]
+        tipos_sensores = ["temperatura", "umidade", "luminosidade", "contador"]
         sensores_completos = []
 
         # Busca todos os sensores de todos os tipos
         for tipo in tipos_sensores:
             sensores = Sensores.objects.filter(sensor__iexact=tipo)
             if sensores.exists():
+
                 sensores_list = list(sensores.values(
                     'sensor',
                     'mac_address',
@@ -116,10 +119,82 @@ class ExportarSensoresView(APIView):
         response['Content-Disposition'] = 'attachment; filename="sensores_exportados.xlsx"'
         return response
 
-class ExportarSensoresSeparadamenteView(APIView):
+class ExportarAmbientesView(APIView):
+    permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        tipos_sensores = ["Temperatura", "Umidade", "Luminosidade", "Contador"]
+        # Busca todos os ambientes do banco de dados
+        ambientes = Ambientes.objects.all()
+
+        if not ambientes.exists():
+            return HttpResponse("Nenhum ambiente encontrado.", status=404)
+
+        # Transforma os dados em lista de dicionários
+        ambientes_list = list(ambientes.values(
+            'sig',
+            'descricao',
+            'ni',
+            'responsavel'
+        ))
+
+        # Cria o DataFrame
+        df = pd.DataFrame(ambientes_list, columns=['sig', 'descricao', 'ni', 'responsavel'])
+
+        # Prepara o arquivo Excel na memória
+        output = BytesIO()
+        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+            df.to_excel(writer, sheet_name='Ambientes', index=False)
+
+        output.seek(0)
+
+        # Retorna o arquivo como resposta para download
+        response = HttpResponse(
+            output,
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
+        response['Content-Disposition'] = 'attachment; filename="ambientes_exportados.xlsx"'
+        return response
+
+class ExportarHistoricoView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        historico = Historico.objects.all()
+
+        if not historico.exists():
+            return HttpResponse("Nenhum histórico encontrado.", status=404)
+
+        # Constrói os dados manualmente para formatar corretamente
+        historico_list = []
+        for h in historico:
+            historico_list.append({
+                'sensor': h.sensor.sensor,  # mostra o nome do sensor
+                'ambiente': h.ambientes.sig,  # ou h.ambientes.descricao se quiser
+                'valor': h.valor,
+                'timestamp': datetime.fromtimestamp(h.timestamp).strftime("%Y-%m-%d %H:%M:%S")
+            })
+
+        # Cria DataFrame
+        df = pd.DataFrame(historico_list, columns=['sensor', 'ambiente', 'valor', 'timestamp'])
+
+        output = BytesIO()
+        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+            df.to_excel(writer, sheet_name='Historico', index=False)
+
+        output.seek(0)
+
+        response = HttpResponse(
+            output,
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
+        response['Content-Disposition'] = 'attachment; filename="historico_exportado.xlsx"'
+        return response
+
+class ExportarSensoresSeparadamenteView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        tipos_sensores = ["temperatura", "umidade", "luminosidade", "contador"]
         output = BytesIO()
 
         with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
@@ -169,8 +244,6 @@ class ImportarSensoresView(APIView):
             try:
                 print(f"Processando o arquivo {arquivo.name}")
 
-                # Certifique-se de que você está passando o arquivo corretamente para o pandas
-                # 'arquivo' já é um objeto InMemoryUploadedFile, que pode ser lido diretamente
                 df = pd.read_excel(arquivo)
 
                 # Normaliza colunas
@@ -208,103 +281,135 @@ class ImportarSensoresView(APIView):
 
 
 class ImportarAmbienteView(APIView):
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
+
     def post(self, request):
-        pasta_arquivos = os.path.join(settings.BASE_DIR, "..", "Dados Integrador")
-        arquivos = ['ambientes.xlsx']  # lista de arquivos para importar
-        erros = []
+        arquivos = request.FILES.getlist('arquivo')  # Captura múltiplos arquivos
+
+        if not arquivos:
+            return Response({"mensagem": "Nenhum arquivo selecionado"}, status=status.HTTP_400_BAD_REQUEST)
+
+        erros = []  # Lista para erros de cada arquivo
 
         for arquivo in arquivos:
-            caminho_arquivo = os.path.join(pasta_arquivos, arquivo)
-
-            if not os.path.exists(caminho_arquivo):
-                erros.append(f"Arquivo {arquivo} não encontrado.")
-                continue
-
             try:
-                df = pd.read_excel(caminho_arquivo)
+                print(f"Processando o arquivo {arquivo.name}")
+                df = pd.read_excel(arquivo)
 
-                campos_esperados = {"sig", "descricao", "ni", "responsavel"}
-                if not campos_esperados.issubset(df.columns):
-                    raise ValueError("Arquivo não contém todas as colunas esperadas.")
+                # Normaliza colunas
+                df.columns = [col.strip().lower() for col in df.columns]
 
+                if df.empty:
+                    print(f"Arquivo {arquivo.name} está vazio.")
+                    erros.append(f"Arquivo {arquivo.name} está vazio.")
+                    continue  # Continua para o próximo arquivo
+
+                # Processamento das linhas do DataFrame
                 for _, linha in df.iterrows():
-                    Ambientes.objects.create(
-                        sig=linha.get("sig"),
-                        descricao=linha.get("descricao"),
-                        ni=linha.get("ni"),
-                        responsavel=linha.get("responsavel")
-                    )
+
+                    try:
+                        Ambientes.objects.create(
+                            sig = linha.get('sig'),
+                            descricao = linha.get('descricao'),
+                            ni = linha.get('ni'),
+                            responsavel = linha.get('responsavel')
+                        )
+                        
+                    except Exception as e:
+                        erros.append(f"Erro ao salvar linha no arquivo {arquivo.name}: {str(e)}")
+
             except Exception as e:
-                erros.append(f"Erro ao importar {arquivo}: {str(e)}")
+                erros.append(f"Erro ao processar o arquivo {arquivo.name}: {str(e)}")
 
         if erros:
-            return Response({"mensagem": "Importação concluída com erros", "erros": erros}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"mensagem": "Importação concluída com erros", "erros": erros}, status=status.HTTP_207_MULTI_STATUS)
 
         return Response({"mensagem": "Dados importados com sucesso!"}, status=status.HTTP_201_CREATED)
     
 class ImportarHistoricoView(APIView):
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
+
     def post(self, request):
-        pasta_arquivos = os.path.join(settings.BASE_DIR, "..", "Dados Integrador")
-        arquivos = ['histórico.xlsx']
-        erros = []
+        arquivos = request.FILES.getlist('arquivo')  # Captura múltiplos arquivos
+
+        if not arquivos:
+            return Response({"mensagem": "Nenhum arquivo selecionado"}, status=status.HTTP_400_BAD_REQUEST)
+
+        erros = []  # Lista para erros de cada arquivo
 
         for arquivo in arquivos:
-            caminho_arquivo = os.path.join(pasta_arquivos, arquivo)
-
-            if not os.path.exists(caminho_arquivo):
-                erros.append(f"Arquivo {arquivo} não encontrado.")
-                continue
-
             try:
-                df = pd.read_excel(caminho_arquivo)
+                print(f"Processando o arquivo {arquivo.name}")
+                df = pd.read_excel(arquivo)
 
-                # Verifica se as colunas necessárias existem
-                campos_esperados = {"sensor", "ambiente", "valor", "timestamp"}
-                if not campos_esperados.issubset(df.columns):
-                    raise ValueError("Arquivo não contém todas as colunas esperadas.")
 
-                # Converte a coluna 'timestamp' para datetime
-                df['timestamp'] = pd.to_datetime(df['timestamp'], errors='coerce')
+                # Normaliza colunas
+                df.columns = [col.strip().lower() for col in df.columns]
 
-                if df['timestamp'].isnull().any():
-                    raise ValueError("Uma ou mais datas na coluna 'timestamp' são inválidas.")
+                if df.empty:
+                    print(f"Arquivo {arquivo.name} está vazio.")
+                    erros.append(f"Arquivo {arquivo.name} está vazio.")
+                    continue  # Continua para o próximo arquivo
 
+                # Processamento das linhas do DataFrame
                 for _, linha in df.iterrows():
+
+                    # Pega as linhas que são foreighkey
+                    sensor_id = linha.get("sensor")
+                    ambiente_id = linha.get("ambiente")
+
+                    # Busca as instâncias relacionadas as suas foreighkey
+                    sensor = Sensores.objects.get(id=sensor_id)
+                    ambiente = Ambientes.objects.get(id=ambiente_id)
+
+                    # Converte datetime para inteiro (timestamp Unix)
+                    
+                    timestamp_dt = linha.get("timestamp")
+
                     try:
-                        sensor_id = linha.get("sensor")
-                        ambiente_id = linha.get("ambiente")
+                        if isinstance(timestamp_dt, datetime):
+                            timestamp_int = int(timestamp_dt.timestamp())
+                        else:
+                            # Tenta múltiplos formatos
+                            formatos_possiveis = [
+                                "%Y-%m-%d %H",       # Ex: 2025-11-30 09
+                                "%Y-%m-%d %H:%M",    # Ex: 2025-11-30 09:15
+                                "%m/%d/%y %H:%M",    # Ex: 07/24/25 11:13
+                            ]
+                            for fmt in formatos_possiveis:
+                                try:
+                                    timestamp_dt = datetime.strptime(str(timestamp_dt), fmt)
+                                    timestamp_int = int(timestamp_dt.timestamp())
+                                    break
+                                except ValueError:
+                                    continue
+                            else:
+                                raise ValueError(f"Formato de data inválido: {timestamp_dt}")
+                    except Exception as e:
+                        erros.append(f"Erro ao converter timestamp na linha do arquivo {arquivo.name}: {str(e)}")
+                        continue
+                    
 
-                        # Busca as instâncias relacionadas
-                        sensor = Sensores.objects.get(id=sensor_id)
-                        ambiente = Ambientes.objects.get(id=ambiente_id)
-
-                        # Converte datetime para inteiro (timestamp Unix)
-                        timestamp_dt = linha.get("timestamp")
-                        timestamp_int = int(timestamp_dt.timestamp())
-
-                        # Criação do registro
+                    try:
                         Historico.objects.create(
                             sensor=sensor,
                             ambientes=ambiente,
                             valor=linha.get("valor"),
                             timestamp=timestamp_int
                         )
-
-                    except Sensores.DoesNotExist:
-                        erros.append(f"Sensor com ID {sensor_id} não encontrado.")
-                    except Ambientes.DoesNotExist:
-                        erros.append(f"Ambiente com ID {ambiente_id} não encontrado.")
+                        
                     except Exception as e:
-                        erros.append(f"Erro ao importar linha: {str(e)}")
+                        erros.append(f"Erro ao salvar linha no arquivo {arquivo.name}: {str(e)}")
 
             except Exception as e:
-                erros.append(f"Erro ao importar {arquivo}: {str(e)}")
+                erros.append(f"Erro ao processar o arquivo {arquivo.name}: {str(e)}")
 
         if erros:
-            return Response({"mensagem": "Importação concluída com erros", "erros": erros}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"mensagem": "Importação concluída com erros", "erros": erros}, status=status.HTTP_207_MULTI_STATUS)
 
         return Response({"mensagem": "Dados importados com sucesso!"}, status=status.HTTP_201_CREATED)
-
 
 
 
