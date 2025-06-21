@@ -1,4 +1,4 @@
-![Texto alternativo](..//SmartCity/FrontEnd/src/assets/Logo.png)
+![](..//SmartCity/FrontEnd/src/assets/Logo.png)
 
 # Smart City
 ### Plataforma para gerenciamento de sensores , ambientes e histórico para uma cidade inteligente. Assim podendo realizar CRUD completo de Sensores ( temperaturam 🌡️, umidade💧, luminosidade💡 e contagem🔢), Ambientes e Históricos. A plataforma vem com um painel Dashboard para melhor vizualização de dados.
