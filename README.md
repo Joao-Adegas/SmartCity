@@ -34,3 +34,5 @@ instale a pasta node_modules
 
   rode o frontEnd
   - npm run dev
+
+documentação api: https://documenter.getpostman.com/view/21570052/2sB2xBDpx8
