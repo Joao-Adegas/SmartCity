@@ -8,12 +8,14 @@ import Cedula from "../../components/Cedula/Cedula"
 import Modal from "../../components/Modal/Modal"
 
 export default function Sensores(){
+    const [sensores,setSensores] = useState([])
 
     const [modalOpen,setModalOpen] = useState(false)
-    const [sensores,setSensores] = useState([])
+    const [editing,isEditing] = useState(false)
+
+    const [error,setError] = useState("")
     const [editSensor,SetEditSensor] = useState(null)
     const [status,setStatus] = useState(true)
-    const [editing,isEditing] = useState(false)
 
     const token = localStorage.getItem("token")
 
@@ -103,6 +105,7 @@ export default function Sensores(){
             })
             .catch(error => {
                 console.log("Erro ao Editar um sensor",Object.values(error.response.data)?.[0]?.[0] || "Erro inesperado")
+                setError(error)
             })
         }
         else{
@@ -117,7 +120,8 @@ export default function Sensores(){
                 closeModal()
             })
             .catch(error =>{
-                 console.log("Erro ao criar um sensor",Object.values(error.response.data)?.[0]?.[0] || "Erro inesperado")
+                console.log("Erro ao criar um sensor",Object.values(error.response.data)?.[0]?.[0] || "Erro inesperado")
+                setError(error)
             })
         }
 
@@ -149,8 +153,6 @@ export default function Sensores(){
                     <h1 className="title-sensores-cadastrados">Sensores Cadastrados</h1>
                     <div className="btn-painel-sensores">
                         <button className="btn-dashboard" onClick={() => openCreateModal()}>Novo  <img src="../src/assets/btn_add.png" alt="add_icon" /></button>
-                        <button className="btn-dashboard">Exportar <img src="../src/assets/exel-icon.png" alt="add_icon" /></button>
-                        <button className="btn-dashboard">Importar <img src="../src/assets/xls-icon.png" alt="add_icon" /></button>
                     </div>
 
                 </div>
@@ -211,7 +213,7 @@ export default function Sensores(){
                         <form action="" onSubmit={handleSubmit}>
                             <div className="modal-container">
                                 <h2> Cadastrar Sensor </h2>
-
+                                {error && <p className="erro-msg">{error}</p>}
                                 <select ref={sensorRef}>
                                     <option value=""> Selecione um tipo de sensor </option>
                                     <option value="temperatura"> temperatura </option>

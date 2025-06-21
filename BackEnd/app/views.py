@@ -199,7 +199,7 @@ class ImportarSensoresView(APIView):
                             status=status_text
                         )
                     except Exception as e:
-                        erros.append(f"Erro ao salvar linha no arquivo {arquivo.name}: {str(e)}")
+                        erros.append(f"Erro ao salvar {linha} no arquivo {arquivo.name}: {str(e)}")
 
             except Exception as e:
                 erros.append(f"Erro ao processar o arquivo {arquivo.name}: {str(e)}")
@@ -454,9 +454,8 @@ class ContarSensorContagemView(APIView):
 
     def get(self, request):
         count_contador = Sensores.objects.filter(sensor='contador').count()
-        if(count_contador > 0):
-            return Response({'contagem': count_contador})
-        return Response({'contagem': "Nenhum"})
+        return Response({'contagem': count_contador})
+        
 
 
 class LoginView(TokenObtainPairView):

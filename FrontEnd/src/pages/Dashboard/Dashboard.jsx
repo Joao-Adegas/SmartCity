@@ -8,6 +8,8 @@ export default function Dashboard(){
 
     const [modalOpen,setModalOpen] = useState(null)
     const [status,setStatus] = useState(true)
+    const [importando, setImportando] = useState(false);
+
 
     const [sensor,setSensores] =  useState([]);
     const [ambiente,setAmbientes] =  useState([]);
@@ -165,7 +167,7 @@ export default function Dashboard(){
             status:status
         }
         
-        axios.post("http://127.0.0.1:8000/sensor/",formData,{
+        axios.post("http://127.0.0.1:8000/ambiente/",formData,{
             headers:{
                 Authorization:`Bearer ${token}`
             }
@@ -192,7 +194,7 @@ export default function Dashboard(){
             status:status
         }
         
-        axios.post("http://127.0.0.1:8000/sensor/",formData,{
+        axios.post("http://127.0.0.1:8000/historico/",formData,{
             headers:{
                 Authorization:`Bearer ${token}`
             }
@@ -327,37 +329,59 @@ export default function Dashboard(){
         });
     };
 
-    const handleArquivoChange = (e) => {
-        setArquivos(e.target.files)
-    }
+    const importarArquivos = (event, tipo) => {
+        const arquivosSelecionados = event.target.files;
 
-    // const handleUpload = () => {
-    //     if (!arquivos || arquivos.length === 0) {
-    //         alert("Selecione um arquivo");
-    //         return;
-    //     }
+        if (!arquivosSelecionados || arquivosSelecionados.length === 0) {
+            alert("Selecione um arquivo");
+            return;
+        }
 
-    //     const formData = new FormData();
-    //     for (let i = 0; i < arquivos.length; i++) {
-    //         formData.append("arquivo", arquivos[i]);
-    //     }
+        const formData = new FormData();
+        for (let i = 0; i < arquivosSelecionados.length; i++) {
+            formData.append("arquivo", arquivosSelecionados[i]);
+        }
 
-    //     axios.post("http://127.0.0.1:8000/importar_sensores/", formData, {
-    //         headers: {
-    //             Authorization: `Bearer ${token}`
-    //         }
-    //     })
-    //     .then(res => {
-    //         alert(res.data.mensagem);
-    //         if (res.data.erros) {
-    //             console.error("Erros ao importar o arquivo:", res.data.erros);
-    //         }
-    //     })
-    //     .catch(err => {
-    //         console.error("Erro ao importar sensores", err);
-    //         alert("Erro ao importar arquivo");
-    //     });
-    // };
+        let url = "";
+
+        if (tipo === "sensores") {
+            url = "http://127.0.0.1:8000/importar_sensores/";
+        } else if (tipo === "ambientes") {
+            url = "http://127.0.0.1:8000/importar_ambientes/";
+        } else if (tipo === "historicos") {
+            url = "http://127.0.0.1:8000/importar_historico/";
+        } else {
+            alert("Tipo de importação inválido.");
+            return;
+        }
+        setImportando(true)
+        axios.post(url, formData, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+        .then(res => {
+            alert(res.data.mensagem);
+            if (res.data.erros) {
+                console.log("Tipo recebido na função importarArquivos:", tipo)
+            }
+            contarAmbientes()
+            contarHistoricos()
+            contarSensorTemperartura()
+            contarSensorUmidade()
+            contarSensorLuminosidade()
+            contarSensorContagem()
+        })
+        .catch(err => {
+            console.error(`Erro ao importar ${tipo}:`, err);
+            alert(`Erro ao importar ${tipo}`);
+        })
+        .finally(() =>{
+            setImportando(false)
+        })
+    };
+
 
     useEffect(()=>{
         contarAmbientes()
@@ -368,61 +392,53 @@ export default function Dashboard(){
         contarSensorContagem()
     },[])
     
+    
     return(
         <>
             <main className="main-dashboard-page">
+                {/* Alerta de processamento */}
+
+                {importando && (
+                <Modal
+                    isOpen={importando}
+                    onClose={closeModal}
+                    className="import-loading-alert"
+                    overlayClassName="custom-overlay"
+                    ariaHideApp={false}
+                    style={{ display: "flex" }}
+                   
+                >
+                    <div style={{ display: "flex" ,alignItems:"center",}}>
+                        <h1>Importando arquivos...</h1>
+                        <img src="../src/assets/gifLoading.gif" alt="gif-loading" srcSet="" className="gifLoading" style={{ width: "100px", height: "auto" }}/>
+                    </div>
+
+                </Modal>
+                )}
                 
+                {/* Container Sensores */}
                 <div className="container">
                     <div className="top-container">
                         <div className="title-container-dashboard">
                             <h1 className="title-container-card">Sensores</h1>
                         </div>
                         <div className="options">
-                            <button className="btn-dashboard" onClick={() => openCreateModal("sensor")}>Novo  <img src="../src/assets/btn_add.png" alt="add_icon" /></button>
+                            
                             <button className="btn-dashboard" onClick={exportarSensores}>Exportar <img src="../src/assets/exel-icon.png" alt="add_icon" /></button>
 
-                        <input
-                            id="file-upload"
-                            type="file"
-                            multiple
-                            accept=".xlsx"
-                            style={{ display: 'none' }}
-                            onChange={(event) => {
-                                const arquivosSelecionados = event.target.files;
+                            <input
+                                id="file-upload-sensores"
+                                type="file"
+                                multiple
+                                accept=".xlsx"
+                                style={{ display: 'none' }}
+                                onChange={(e) => (importarArquivos(e,"sensores"))}
+                            />
 
-                                if (!arquivosSelecionados || arquivosSelecionados.length === 0) {
-                                    alert("Selecione um arquivo");
-                                    return;
-                                }
-
-                                const formData = new FormData();
-                                for (let i = 0; i < arquivosSelecionados.length; i++) {
-                                    formData.append("arquivo", arquivosSelecionados[i]);
-                                }
-
-                                axios.post("http://127.0.0.1:8000/importar_sensores/", formData, {
-                                    headers: {
-                                        Authorization: `Bearer ${token}`,
-                                    }
-                                })
-                                .then(res => {
-                                    alert(res.data.mensagem);
-                                    if (res.data.erros) {
-                                        console.error("Erros ao importar o arquivo:", res.data.erros);
-                                    }
-                                })
-                                .catch(err => {
-                                    console.error("Erro ao importar sensores", err);
-                                    alert("Erro ao importar arquivo");
-                                });
-                            }}
-                        />
-
-                        <label htmlFor="file-upload" className="btn-dashboard custom-upload-button">
-                            <img src="../src/assets/xls-icon.png" alt="Upload Icon" />
-                            <span>Importar Arquivo</span>
-                        </label>
-
+                            <label htmlFor="file-upload-sensores" className="btn-dashboard custom-upload-button">
+                                <img src="../src/assets/xls-icon.png" alt="Upload Icon" />
+                                <span>Importar</span>
+                            </label>
 
                         </div>
                     </div>
@@ -447,15 +463,29 @@ export default function Dashboard(){
 
                 </div>
 
+                 {/* Container Ambientes */}
                 <div className="container">
                     <div className="top-container">
                         <div className="title-container-dashboard">
                             <h1 className="title-container-card">Ambientes</h1>
                         </div>
                         <div className="options">
-                            <button className="btn-dashboard" onClick={() => openCreateModal("ambiente")}>Novo  <img src="../src/assets/btn_add.png" alt="add_icon" /></button>
+                            
                             <button className="btn-dashboard" onClick={exportarAmbientes}>Exportar <img src="../src/assets/exel-icon.png" alt="add_icon" /></button>
-                            <button className="btn-dashboard">Importar <img src="../src/assets/xls-icon.png" alt="add_icon" /></button>
+                            <input
+                            id="file-upload-ambientes"
+                            type="file"
+                            multiple
+                            accept=".xlsx"
+                            style={{ display: 'none' }}
+                            onChange={(e) => (importarArquivos(e,"ambientes"))}
+                        />
+
+                        <label htmlFor="file-upload-ambientes" className="btn-dashboard custom-upload-button">
+                            <img src="../src/assets/xls-icon.png" alt="Upload Icon" />
+                            <span>Importar</span>
+                        </label>
+
                         </div>
                     </div>
                     <div className="container-cards-dashboard">
@@ -466,15 +496,31 @@ export default function Dashboard(){
 
                 </div>
 
+
+                 {/* Container Histórico */}
                   <div className="container">
                     <div className="top-container">
                         <div className="title-container-dashboard">
                             <h1 className="title-container-card">Históricos</h1>
                         </div>
                         <div className="options">
-                            <button className="btn-dashboard" onClick={() => openCreateModal("historico")}>Novo  <img src="../src/assets/btn_add.png" alt="add_icon" /></button>
+                            
                             <button className="btn-dashboard"  onClick={exportarHistorico}>Exportar <img src="../src/assets/exel-icon.png" alt="add_icon" /></button>
-                            <button className="btn-dashboard">Importar <img src="../src/assets/xls-icon.png" alt="add_icon" /></button>
+                            
+                            <input
+                            id="file-upload-historico"
+                            type="file"
+                            multiple
+                            accept=".xlsx"
+                            style={{ display: 'none' }}
+                             onChange={(e) => (importarArquivos(e,"historicos"))}
+                        />
+
+                        <label htmlFor="file-upload-historico" className="btn-dashboard custom-upload-button">
+                            <img src="../src/assets/xls-icon.png" alt="Upload Icon" />
+                            <span>Importar</span>
+                        </label>
+
                         </div>
                     </div>
                     <div className="container-cards-dashboard">

@@ -142,8 +142,6 @@ export default function Ambientes(){
                     <h1 className="title-sensores-cadastrados">Ambientes Cadastrados</h1>
                     <div className="btn-painel-sensores">
                         <button className="btn-dashboard" onClick={openCreateModal}>Novo  <img src="../src/assets/btn_add.png" alt="add_icon" /></button>
-                        <button className="btn-dashboard">Exportar <img src="../src/assets/exel-icon.png" alt="add_icon" /></button>
-                        <button className="btn-dashboard">Importar <img src="../src/assets/xls-icon.png" alt="add_icon" /></button>
                     </div>
 
                 </div>
