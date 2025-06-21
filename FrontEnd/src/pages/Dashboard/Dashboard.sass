@@ -1,0 +1,76 @@
+@import '../../../src/_var'
+
+.main-dashboard-page
+    display: flex
+    gap: 3rem
+    height: auto
+    .container
+        display: flex
+        flex-direction: column
+        justify-content: space-between
+        align-items: center
+        padding: 1rem
+        padding-left: 3rem 
+        width: 100%
+        gap: 1rem
+
+        .top-container
+            display: flex
+            align-items: center
+            justify-content: space-between
+            width: 100%
+
+            .title-container-card
+                font-weight: 400
+                color: $text-button-color
+                font-size: 2.5rem
+
+            .options
+                display: flex
+                gap: 1rem     
+
+                .btn-dashboard
+                    border: none
+                    outline: none
+                    display: flex
+                    align-items: center
+                    gap: 0.3rem
+                    padding: 0.5rem 1rem    
+                    background-color: $blue
+                    color: $white 
+                    font-weight: 700
+                    font-size: 0.9rem
+                    cursor: pointer
+            
+        .container-cards-dashboard
+            display: flex
+            width: 100%
+            justify-content: space-between
+            gap: 1rem
+            
+
+            .card
+                padding: 1rem
+                width: 15rem
+                background-color: $white
+                box-shadow: rgba(0, 0, 0, 15%) 0px 5px 1px
+
+
+                .sensor-quantity-card
+                    font-size: 2.5rem
+                    font-weight: 400
+                    color: $blue
+
+        
+.modal-container
+    display: flex
+    gap: 1rem
+    flex-direction: column
+    align-items: center
+    justify-content: center
+
+    .radio
+        display: flex
+        gap: 1rem
+
+

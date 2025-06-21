@@ -1,0 +1,210 @@
+@import '../../../src/_var'
+    
+
+        
+header
+    background-color: $blue
+    display: flex
+    justify-content: space-between
+    align-items: center
+    padding: 0 2rem
+    color: $white
+
+    .img-logo
+        width: 4rem
+
+    ul
+        display: flex
+        gap: 3rem
+        list-style: none
+        font-size: 1.3rem
+
+        a
+            color: $white
+            text-decoration: none
+
+            &:hover
+                text-decoration: underline
+
+main
+    display: flex
+    flex-direction: column
+    gap: 2rem
+
+    section
+        display: flex
+        flex-direction: column
+        gap: 3rem
+
+    .section
+        background-image: url('../src/assets/image-main.jpg')
+        background-size: cover
+        background-position: center
+        background-repeat: no-repeat
+        width: 100%
+        height: 120vh
+
+        .banner
+            position: absolute
+            top: 70vh
+            left: 50%
+            transform: translate(-50%, -50%)
+            display: flex
+            flex-direction: column
+            justify-content: center
+            align-items: center
+            margin: 0 auto
+            background-color: $white-trasnparent
+            color: $white
+            width: 30rem
+            padding: 1rem
+            
+            .title-main
+                font-size: 4.5rem   
+                text-shadow: rgba(0, 0, 0, 100%) 0px 54px 55px, rgba(0, 0, 0,50%) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px
+
+            .subtitle-main
+                text-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px
+                font-weight: bold
+                font-size: 1.3rem
+
+    .cards-container
+        display: flex
+        justify-content: center
+        align-items: center
+        padding: 1rem
+        
+
+        .card
+            background-color: $blue
+            padding: 3rem
+            color: $white
+            display: flex
+            flex-direction: column
+            gap: 2rem
+            box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px
+
+        .center-card
+            padding: 4.5rem
+            border: solid 1px $white
+
+        .img-card
+            display: flex
+            margin:0 auto
+            width: 6rem
+
+    .title
+        display: flex
+        justify-content: center
+        padding: 1rem
+        font-size: 2rem
+
+    .cards-sensores
+        display: flex
+        justify-content: center
+        align-items: center
+        gap: 3rem
+    
+        .card-sensor
+            display: flex
+            flex-direction: column
+            justify-items: center
+            align-items: center
+
+
+        hr
+            width: 1px
+            height: 40vh
+            background-color: #000
+            border: none
+
+    .container-dashboard
+        background-color: $blue
+        height: 60vh
+        display: flex
+        align-items: center
+        justify-content: center
+        gap: 10rem
+
+        .text
+            width: 20rem
+            color: $white
+            font-size: 1.5rem
+            
+
+            .msg
+                font-weight: 300
+
+        .container-dashboard-cards
+            display: flex
+            justify-content: center
+            align-items: center
+            flex-wrap: wrap
+            color: $text-button-color
+            width: 30rem
+            padding: 1rem
+            gap: 2rem
+
+            .card-dashborad
+                background-color: $white
+                padding: 1rem
+                width: 13rem
+                font-size: 1.5rem
+
+                .sensor
+                    font-size: 1rem
+                    color: black
+                
+                .quantity-sensor
+                    font-weight: 400
+
+    .container-importacao-exportacao
+        display: flex
+        padding: 2rem
+        justify-content: center
+        gap: 5rem
+        align-items: center
+
+        .print-exel
+            box-shadow: rgba(0, 0, 0, 50%)  55px
+
+footer
+    margin-top: 7vh
+    display: flex
+    align-items: center
+    justify-content: center
+    flex-direction: column
+    background-color: $background-footer
+    color: $white
+
+    .main-footer
+        display: flex
+        align-items: center
+        justify-content: center
+        gap: 2rem
+
+        .mensagens
+            display: flex
+            gap: 2rem
+            font-size: 1.2rem
+            
+            .separador
+                width: 30rem
+
+
+        .Logo-footer
+            width: 20rem
+
+    .direitos-autorais
+        width: 100%
+        padding: 1rem
+        background-color:#042D51
+
+        .direitos-text
+            display: flex
+            justify-content: center
+        
+
+
+
+        
