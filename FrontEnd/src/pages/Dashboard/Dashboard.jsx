@@ -20,6 +20,8 @@ export default function Dashboard(){
     const [quantidadeSensorLuminosidade,setQuantidadeSensorLuminosidade] = useState(0)
     const [quantidadeSensorContagem,setQuantidadeSensorContagem] = useState(0)
 
+    const [arquivos, setArquivos] = useState(null)
+
     const token = localStorage.getItem("token")
  
     //Sensores
@@ -255,6 +257,108 @@ export default function Dashboard(){
         });
     }
 
+    const exportarSensores = () => {
+        const token = localStorage.getItem("token");
+
+        axios.get("http://127.0.0.1:8000/exportar_sensores/", {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            responseType: 'blob', // MUITO IMPORTANTE para arquivos!
+        })
+        .then(response => {
+            // Cria um link temporário para download
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'sensores_exportados.xlsx'); // nome do arquivo
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+        })
+        .catch(error => {
+            console.error("Erro ao exportar sensores:", error);
+        });
+    };
+    const exportarAmbientes = () => {
+        const token = localStorage.getItem("token");
+
+        axios.get("http://127.0.0.1:8000/exportar_ambientes/", {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            responseType: 'blob', // MUITO IMPORTANTE para arquivos!
+        })
+        .then(response => {
+            // Cria um link temporário para download
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'ambientes_exportados.xlsx'); // nome do arquivo
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+        })
+        .catch(error => {
+            console.error("Erro ao exportar sensores:", error);
+        });
+    };
+    const exportarHistorico = () => {
+        const token = localStorage.getItem("token");
+
+        axios.get("http://127.0.0.1:8000/exportar_historico/", {
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            responseType: 'blob', // MUITO IMPORTANTE para arquivos!
+        })
+        .then(response => {
+            // Cria um link temporário para download
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'Historicos_exportados.xlsx'); // nome do arquivo
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+        })
+        .catch(error => {
+            console.error("Erro ao exportar sensores:", error);
+        });
+    };
+
+    const handleArquivoChange = (e) => {
+        setArquivos(e.target.files)
+    }
+
+    // const handleUpload = () => {
+    //     if (!arquivos || arquivos.length === 0) {
+    //         alert("Selecione um arquivo");
+    //         return;
+    //     }
+
+    //     const formData = new FormData();
+    //     for (let i = 0; i < arquivos.length; i++) {
+    //         formData.append("arquivo", arquivos[i]);
+    //     }
+
+    //     axios.post("http://127.0.0.1:8000/importar_sensores/", formData, {
+    //         headers: {
+    //             Authorization: `Bearer ${token}`
+    //         }
+    //     })
+    //     .then(res => {
+    //         alert(res.data.mensagem);
+    //         if (res.data.erros) {
+    //             console.error("Erros ao importar o arquivo:", res.data.erros);
+    //         }
+    //     })
+    //     .catch(err => {
+    //         console.error("Erro ao importar sensores", err);
+    //         alert("Erro ao importar arquivo");
+    //     });
+    // };
+
     useEffect(()=>{
         contarAmbientes()
         contarHistoricos()
@@ -275,8 +379,51 @@ export default function Dashboard(){
                         </div>
                         <div className="options">
                             <button className="btn-dashboard" onClick={() => openCreateModal("sensor")}>Novo  <img src="../src/assets/btn_add.png" alt="add_icon" /></button>
-                            <button className="btn-dashboard">Exportar <img src="../src/assets/exel-icon.png" alt="add_icon" /></button>
-                            <button className="btn-dashboard">Importar <img src="../src/assets/xls-icon.png" alt="add_icon" /></button>
+                            <button className="btn-dashboard" onClick={exportarSensores}>Exportar <img src="../src/assets/exel-icon.png" alt="add_icon" /></button>
+
+                        <input
+                            id="file-upload"
+                            type="file"
+                            multiple
+                            accept=".xlsx"
+                            style={{ display: 'none' }}
+                            onChange={(event) => {
+                                const arquivosSelecionados = event.target.files;
+
+                                if (!arquivosSelecionados || arquivosSelecionados.length === 0) {
+                                    alert("Selecione um arquivo");
+                                    return;
+                                }
+
+                                const formData = new FormData();
+                                for (let i = 0; i < arquivosSelecionados.length; i++) {
+                                    formData.append("arquivo", arquivosSelecionados[i]);
+                                }
+
+                                axios.post("http://127.0.0.1:8000/importar_sensores/", formData, {
+                                    headers: {
+                                        Authorization: `Bearer ${token}`,
+                                    }
+                                })
+                                .then(res => {
+                                    alert(res.data.mensagem);
+                                    if (res.data.erros) {
+                                        console.error("Erros ao importar o arquivo:", res.data.erros);
+                                    }
+                                })
+                                .catch(err => {
+                                    console.error("Erro ao importar sensores", err);
+                                    alert("Erro ao importar arquivo");
+                                });
+                            }}
+                        />
+
+                        <label htmlFor="file-upload" className="btn-dashboard custom-upload-button">
+                            <img src="../src/assets/xls-icon.png" alt="Upload Icon" />
+                            <span>Importar Arquivo</span>
+                        </label>
+
+
                         </div>
                     </div>
                     <div className="container-cards-dashboard">
@@ -307,7 +454,7 @@ export default function Dashboard(){
                         </div>
                         <div className="options">
                             <button className="btn-dashboard" onClick={() => openCreateModal("ambiente")}>Novo  <img src="../src/assets/btn_add.png" alt="add_icon" /></button>
-                            <button className="btn-dashboard">Exportar <img src="../src/assets/exel-icon.png" alt="add_icon" /></button>
+                            <button className="btn-dashboard" onClick={exportarAmbientes}>Exportar <img src="../src/assets/exel-icon.png" alt="add_icon" /></button>
                             <button className="btn-dashboard">Importar <img src="../src/assets/xls-icon.png" alt="add_icon" /></button>
                         </div>
                     </div>
@@ -326,7 +473,7 @@ export default function Dashboard(){
                         </div>
                         <div className="options">
                             <button className="btn-dashboard" onClick={() => openCreateModal("historico")}>Novo  <img src="../src/assets/btn_add.png" alt="add_icon" /></button>
-                            <button className="btn-dashboard">Exportar <img src="../src/assets/exel-icon.png" alt="add_icon" /></button>
+                            <button className="btn-dashboard"  onClick={exportarHistorico}>Exportar <img src="../src/assets/exel-icon.png" alt="add_icon" /></button>
                             <button className="btn-dashboard">Importar <img src="../src/assets/xls-icon.png" alt="add_icon" /></button>
                         </div>
                     </div>
