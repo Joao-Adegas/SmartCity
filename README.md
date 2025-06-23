@@ -67,3 +67,6 @@
 
 # Link documentação API Django 
 https://documenter.getpostman.com/view/21570052/2sB2xBDpx8
+
+# Link Documentação
+https://docs.google.com/document/d/1VO-hmSUhJF6IImUhMjrjvHk8TlAjtL2VxpymGZPjZlE/edit?tab=t.0
