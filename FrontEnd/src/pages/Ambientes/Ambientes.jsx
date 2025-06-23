@@ -149,8 +149,8 @@ export default function Ambientes(){
 
                     <div className="container-campos">
                         <h2 className="campo-tabela-sensor">Sig</h2>
-                        <h2 className="campo-tabela-sensor">NI</h2>
                         <h2 className="campo-tabela-sensor">Descrição</h2>
+                        <h2 className="campo-tabela-sensor">NI</h2>
                         <h2 className="campo-tabela-sensor">Responsavel</h2>
                         <h2 className="campo-tabela-sensor">Opções</h2>
                     </div>
@@ -163,9 +163,21 @@ export default function Ambientes(){
                                      <div className="cedula-sesnores">
 
                                             <h2>{a.sig}</h2>
-                                            <h2>{a.descricao}</h2>
-                                            <h2>{a.ni}</h2>
-                                            <h2>{a.responsavel}</h2>
+
+                                            <div className="tooltip-container">
+                                                <h2 className="limit-caracter">{a.descricao}</h2>
+                                                <span className="tooltip-text">{a.descricao}</span>
+                                            </div>
+
+                                            <div className="tooltip-container">
+                                                <h2 className="limit-caracter">{a.ni}</h2>
+                                                <span className="tooltip-text">{a.ni}</span>
+                                            </div>
+
+                                            <div className="tooltip-container">
+                                                <h2 className="limit-caracter">{a.responsavel}</h2>
+                                                <span className="tooltip-text">{a.responsavel}</span>
+                                            </div>
 
                                             <div className="opcoes">
                                                 <button className="icon-opcoes" onClick={() => deletarAmbiente(a.id)}>

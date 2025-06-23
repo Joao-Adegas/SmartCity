@@ -58,3 +58,30 @@
             font-weight: 400
 
         
+select 
+  appearance: none           //// Remove estilo padrão 
+  -webkit-appearance: none  // Safari/Chrome 
+  -moz-appearance: none     // Firefox 
+  
+  background-color: #f0f0f0
+  border: 1px solid #ccc
+  padding: 10px 14px
+  font-size: 16p;
+  width: 100%
+  color: #333
+
+  background-image: url('data:image/svg+xml;charset=US-ASCII,<svg width="10" height="5" viewBox="0 0 10 5" xmlns="http://www.w3.org/2000/svg"><path fill="%23333" d="M0 0l5 5 5-5z"/></svg>')
+  background-repeat: no-repeat
+  background-position: right 10px center
+  background-size: 10px 5px
+
+    
+select:focus 
+    outline: none
+
+
+/* Não é possível estilizar <option> de forma consistente em todos os navegadores */
+.option 
+    background-color: white
+    color: #333
+    font-size: 16px

@@ -1,4 +1,4 @@
-import "../Historicos/Historicos.sass"
+import "../Ambientes/Ambientes.sass"
 import CedulaAH from "../../components/CedulaAH/CedulaAH"
 
 import { useEffect, useState ,useRef} from "react"
@@ -171,10 +171,19 @@ export default function Historicos(){
                                     <li key={a.id} className="li-sensores">
                                         <div className="cedula-sesnores" key={a.id}>
 
-                                            <h2 key={a.id}>{a.sensor_tipo}</h2>
-                                            <h2 key={a.id}>{a.ambiente_sig}</h2>
-                                            <h2 key={a.id}>{a.ambiente_responsavel}</h2>
-                                            <h2>{a.timestamp}</h2>
+                                            <h2>{a.sensor_tipo}</h2>
+                                            <h2>{a.ambiente_sig}</h2>
+
+                                            <div className="tooltip-container">
+                                                <h2 className="limit-caracter">{a.ambiente_responsavel}</h2>
+                                                <span className="tooltip-text">{a.ambiente_responsavel}</span>
+                                            </div>
+                                            
+                                            <div className="tooltip-container">
+                                                <h2 className="limit-caracter">{a.timestamp}</h2>
+                                                <span className="tooltip-text">{a.timestamp}</span>
+                                            </div>
+
                                             <h2>{a.valor}</h2>
                                           
 

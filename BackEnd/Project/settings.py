@@ -69,7 +69,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
 ]
 
-ROOT_URLCONF = 'Projeto.urls'
+ROOT_URLCONF = 'Project.urls'
 
 TEMPLATES = [
     {
@@ -86,7 +86,7 @@ TEMPLATES = [
     },
 ]
 AUTH_USER_MODEL = 'app.Usuario'
-WSGI_APPLICATION = 'Projeto.wsgi.application'
+WSGI_APPLICATION = 'Project.wsgi.application'
 CORS_ALLOW_ALL_ORIGINS = True 
 
 # Database

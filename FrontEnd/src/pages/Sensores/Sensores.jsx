@@ -215,11 +215,11 @@ export default function Sensores(){
                                 <h2> Cadastrar Sensor </h2>
                                 {error && <p className="erro-msg">{error}</p>}
                                 <select ref={sensorRef}>
-                                    <option value=""> Selecione um tipo de sensor </option>
-                                    <option value="temperatura"> temperatura </option>
-                                    <option value="umidade"> umidade </option>
-                                    <option value="luminosidade"> luminosidade </option>
-                                    <option value="contagem"> contagem </option>
+                                    <option value="" className="option"> Selecione um tipo de sensor </option>
+                                    <option value="temperatura" className="option"> temperatura </option>
+                                    <option value="umidade" className="option"> umidade </option>
+                                    <option value="luminosidade" className="option"> luminosidade </option>
+                                    <option value="contagem" className="option"> contagem </option>
                                 </select>
 
                                 <input type="text" name="" id="mac_address" placeholder="Digite o endereço" ref={mac_addressRef}/>

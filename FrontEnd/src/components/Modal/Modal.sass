@@ -1,3 +1,5 @@
+@import '../../../src/_var'
+    
 .custom-overlay
     position: fixed
     top: 0
@@ -9,7 +11,7 @@
     align-items: center
     justify-content: center
     z-index: 10
-    font-family: "Poppins"
+    font-family: "Inter"
 
     .custom-modal
         position: relative
@@ -21,6 +23,7 @@
         display: flex
         flex-direction: column
         animation: fadeIn 0.3s ease-in-out
+        font-family: "Inter"
 
         h2
             font-size: 22px
@@ -35,21 +38,17 @@
         input, select
             width: 100%
             padding: 0.6rem
-            font-family: "Poppins"
+            font-family: "Inter"
+            font-weight: 500
             outline: none
             border: none
             border-bottom: 3px solid #8b8b8b
             background-color: #E0E2E5
             font-size: 16px
 
-            &::placeholder
-            
-                color: #c0c0c0
 
-            
-        
-              
-        
+            &::placeholder
+                color: $text-button-color
 
         button
             display: flex
@@ -64,8 +63,10 @@
             transition: background-color 0.3s ease
 
         button[type="submit"]
-            background-color: #007bff
-            color: white
+            background-color: $blue
+            color: $white
+            border-radius: 0
+            box-shadow: rgba(0, 0, 0, 40%) 0px 4px 3px
             text-align: center
 
             &:hover
