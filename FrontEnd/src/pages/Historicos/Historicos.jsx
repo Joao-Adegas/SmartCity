@@ -204,7 +204,6 @@ export default function Historicos(){
 
                 <Modal
                     isOpen={modalOpen}
-                    onClose={closeModal}
                     className="custom-modal"
                     overlayClassName="custom-overlay"
                     ariaHideApp={false}
@@ -218,8 +217,12 @@ export default function Historicos(){
                                 <input type="text" name="" ref={valorRef} id="valor" placeholder="Digite o valor"/>
                                 <input type="text" name="" ref={timestampRef} id="timestamp" placeholder="Digite o timestamp"/>
 
+                                <div className="btns-modal">
+                                    <button className="btn-modal" type="submit">Salvar</button>
+                                    <button onClick={closeModal} className="btn-modal">Fechar</button>
+                                </div>
+
                             </div>
-                            <button className="btn-modal" type="submit">Salvar</button>
                         </form>
 
                 </Modal>

@@ -200,18 +200,22 @@ export default function Ambientes(){
                 </div>
                 <Modal
                     isOpen={modalOpen}
-                    onClose={closeModal}
                     className="custom-modal"
                     overlayClassName="custom-overlay"
                     ariaHideApp={false}
                 >
                     <h2>Cadastrar Ambiente</h2>
                     <form action="" onSubmit={handleSubmit}>
-                        <input type="text" name="" id="sig" placeholder="Digite o sig" ref={sigRef}/>
-                        <input type="text" name="" id="NI" placeholder="Digite o NI" ref={niRef}/>
-                        <input type="text" name="" id="descricao" placeholder="Digite a descricao" ref={descricaoRef}/>
-                        <input type="text" name="" id="responsavel" placeholder="Digite o responsavel" ref={responsavelRef}/>
-                        <button type="submit">Cadastrar</button>
+                        <div className="modal-container">
+                            <input type="text" name="" id="sig" placeholder="Digite o sig" ref={sigRef}/>
+                            <input type="text" name="" id="NI" placeholder="Digite o NI" ref={niRef}/>
+                            <input type="text" name="" id="descricao" placeholder="Digite a descricao" ref={descricaoRef}/>
+                            <input type="text" name="" id="responsavel" placeholder="Digite o responsavel" ref={responsavelRef}/>
+                            <div className="btns-modal">
+                                <button type="submit" className="btn-modal">Cadastrar</button>
+                                <button onClick={closeModal} className="btn-modal">Fechar</button>
+                            </div>
+                        </div>
                     </form>
                   
                 </Modal>

@@ -208,10 +208,9 @@ export default function Sensores(){
 
                 <Modal
                     isOpen={modalOpen}
-                    onClose={closeModal}
                     className="custom-modal"
                     overlayClassName="custom-overlay"
-                    ariaHideApp={false}
+                    ariaHideApp={true}
                 >
                         <form action="" onSubmit={handleSubmit}>
                             <div className="modal-container">
@@ -253,8 +252,11 @@ export default function Sensores(){
                                     <label htmlFor="">Inativo</label>
                                 </div>
 
+                                <div className="btns-modal">
+                                    <button className="btn-modal" type="submit">Salvar</button>
+                                    <button onClick={closeModal} className="btn-modal">Fechar</button>
+                                </div>
                             </div>
-                            <button className="btn-modal" type="submit">Salvar</button>
                         </form>
 
                 </Modal>

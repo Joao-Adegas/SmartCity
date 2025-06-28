@@ -11,9 +11,10 @@ export default function ModalComponent({isOpen,onClose,children}){
         contentLabel="Modal"
         className="custom-modal"
         overlayClassName="custom-overlay"
-        shouldCloseOnOverlayClick={true}
+        shouldCloseOnOverlayClick={false}
         >
             {children}
+            
         </Modal>
     )
 }
