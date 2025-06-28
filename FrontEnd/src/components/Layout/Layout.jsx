@@ -11,9 +11,9 @@ export default function Layout(){
             <footer>
                  
                 <div className="main-footer">
-                    <figure>
+                    {/* <figure>
                         <img src="../src/assets/Logo.png" alt="" srcSet="" className="Logo-footer"/>
-                    </figure>
+                    </figure> */}
 
                     <div>
                         <div className="mensagens">
