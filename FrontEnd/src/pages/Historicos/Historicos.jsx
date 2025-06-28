@@ -1,9 +1,9 @@
 import "../Ambientes/Ambientes.sass"
-import CedulaAH from "../../components/CedulaAH/CedulaAH"
 
 import { useEffect, useState ,useRef} from "react"
 import axios from "axios"
 import Modal from "../../components/Modal/Modal"
+import Swal from "sweetalert2"
 
 export default function Historicos(){
 
@@ -88,6 +88,7 @@ export default function Historicos(){
                 }
             })
             .then(response => {
+                Swal.fire(`Histórico ${editHistorico.id} editado com sucesso!`)
                 buscarHistoricos()
                 closeModal()
             })
@@ -108,17 +109,12 @@ export default function Historicos(){
                 }
             })
             .then(response => {
+                Swal.fire(`Histórico cadastrado com sucesso!`)
                 buscarHistoricos()
                 closeModal()
-                console.log(`Histórico criado com sucesso`)
             })
             .catch(error =>{
                 console.log("Erro ao criar um histórico",Object.values(error.response.data)?.[0]?.[0] || "Erro inesperado")
-                  if (error.response && error.response.data) {
-                        console.log("Erro ao editar histórico", Object.values(error.response.data)?.[0]?.[0] || "Erro inesperado");
-                    } else {
-                        console.log("Erro inesperado:", error.message || error);
-                    }
             })
         }
 
@@ -131,7 +127,7 @@ export default function Historicos(){
             }
         })
         .then(response =>{
-            console.log(`Historico ${id} deletado com sucesso`)
+            Swal.fire(`Histórico ${id} deletado com sucesso!`)
             buscarHistoricos()
         })
         .catch(error =>{

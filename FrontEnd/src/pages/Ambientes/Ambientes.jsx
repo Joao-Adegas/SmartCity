@@ -1,6 +1,6 @@
 import "../Ambientes/Ambientes.sass"
-import CedulaAH from "../../components/CedulaAH/CedulaAH"
 import Modal from "../../components/Modal/Modal"
+import Swal from "sweetalert2"
 
 import { useEffect, useState,useRef } from "react"
 import axios from "axios"
@@ -89,6 +89,7 @@ export default function Ambientes(){
                 }
             })
             .then(response => {
+                Swal.fire(`Ambiente ${editAmbiente.id} editado com sucesso!`)
                 buscarAmbientes()
                 closeModal()
             })
@@ -104,9 +105,9 @@ export default function Ambientes(){
                 }
             })
             .then(response => {
+                Swal.fire(`Ambiente criado com sucesso!`)
                 buscarAmbientes()
                 closeModal()
-                console.log(`Ambiente criado com sucesso`)
             })
             .catch(error =>{
                 console.log("Erro ao criar um ambiente",Object.values(error.response.data)?.[0]?.[0] || "Erro inesperado")
@@ -122,7 +123,7 @@ export default function Ambientes(){
             }
         })
         .then(response =>{
-            console.log(`Ambiente ${id} deletado com sucesso`)
+            Swal.fire(`Ambiente ${id} deletado com sucesso!`)
             buscarAmbientes()
         })
         .catch(error =>{

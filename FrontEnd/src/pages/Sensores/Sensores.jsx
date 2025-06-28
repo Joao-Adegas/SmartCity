@@ -1,5 +1,5 @@
 import "../Sensores/Sensores.sass"
-
+import Swal from "sweetalert2"
 
 import { useState,useEffect,useRef } from "react"
 import axios from 'axios'
@@ -100,6 +100,7 @@ export default function Sensores(){
                 }
             })
             .then(response => {
+                Swal.fire(`Sensor ${editSensor.id} editado com sucesso!`)
                 buscarSensores()
                 closeModal()
             })
@@ -116,6 +117,7 @@ export default function Sensores(){
                 }
             })
             .then(response => {
+                Swal.fire(`Sensor cadastrado com sucesso!`)
                 buscarSensores()
                 closeModal()
             })
@@ -134,6 +136,7 @@ export default function Sensores(){
             }
         })
         .then(response =>{
+            Swal.fire(`Sensor ${id} deletado com sucesso!`)
             console.log(`Sensor ${id} deletado com sucesso`)
             buscarSensores()
         })

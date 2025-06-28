@@ -66,7 +66,7 @@ export default function Login(){
                         </div>
 
                         <div>
-                            <input type="text" name="" id="" className="input_text" placeholder="Password" {...register("password")}/>
+                            <input type="password" name="" id="" className="input_text" placeholder="Password" {...register("password")}/>
                         </div>
                      
                         <button type="submit" className="input-submit">Entrar</button>

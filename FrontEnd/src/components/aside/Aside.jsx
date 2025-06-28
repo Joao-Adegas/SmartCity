@@ -1,5 +1,5 @@
 import "../aside/Aside.sass"
-
+import { NavLink } from "react-router-dom";
 
 export default function Aside(){
 
@@ -18,11 +18,11 @@ export default function Aside(){
                         </div>
 
                         <ul>
-                            <li> <a href="/">Home</a> </li>
-                            <li> <a href="/Inicial">Dashboard</a> </li>
-                            <li> <a href="/Sensores">Sensores</a> </li>
-                            <li> <a href="/Ambientes">Ambientes</a> </li>
-                            <li> <a href="/Históricos">Históricos</a> </li>
+                            <li> <NavLink className={({isActive}) => isActive ? "ativo":"NavLink"}  to="/">Home</NavLink> </li>
+                            <li> <NavLink className={({isActive}) => isActive ? "ativo":"NavLink"}  to="/Inicial">Dashboard</NavLink> </li>
+                            <li> <NavLink className={({isActive}) => isActive ? "ativo":"NavLink"}  to="/Sensores">Sensores</NavLink> </li>
+                            <li> <NavLink className={({isActive}) => isActive ? "ativo":"NavLink"}  to="/Ambientes">Ambientes</NavLink> </li>
+                            <li> <NavLink className={({isActive}) => isActive ? "ativo":"NavLink"}  to="/Históricos">Históricos</NavLink> </li>
                         </ul>
                     </div>
 

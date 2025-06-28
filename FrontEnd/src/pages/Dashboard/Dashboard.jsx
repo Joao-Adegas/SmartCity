@@ -1,15 +1,16 @@
 import "../Dashboard/Dashboard.sass"
 import Aside from "../../components/aside/Aside"
 import Modal from "../../components/Modal/Modal"
-import { useState,useEffect,useRef } from "react"
+
 import axios from 'axios'
+
+import { useState,useEffect,useRef } from "react"
 
 export default function Dashboard(){
 
     const [modalOpen,setModalOpen] = useState(null)
     const [status,setStatus] = useState(true)
     const [importando, setImportando] = useState(false);
-
 
     const [sensor,setSensores] =  useState([]);
     const [ambiente,setAmbientes] =  useState([]);

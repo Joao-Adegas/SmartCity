@@ -50,26 +50,36 @@
         ul
             list-style: none
             display: flex
+            gap: 0.5rem
             flex-direction: column
 
             li
                 font-size: 1rem
-                padding: 0.5rem
                 border-radius: 0.4rem
                 font-weight: 400
                
+                .NavLink
+                    transition: 0.2s
+                    width: 100%
+                    border-radius: 0.3rem
+                    color:$white
+                    padding: 0.5rem 
+                    text-decoration: none
+                    display: inline-flex
+                
+                    &:hover
+                        transition: 0.1s
+                        background-color: $white-trasnparent
 
-                &:hover
-                    background-color: $white-trasnparent
-
-                &:active
+                .ativo
+                    transition: 0.2s
+                    width: 100%
+                    border-radius: 0.3rem
+                    color:$white
+                    padding: 0.5rem
+                    text-decoration: none
+                    display: inline-flex
                     background-color: $text-button-color
 
-                
-                a
-                    color:$white
-                    text-decoration: none
-                
-
-        
+            
     
