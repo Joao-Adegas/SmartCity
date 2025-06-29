@@ -3,7 +3,7 @@ import "../Login/Login.sass"
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
+import { useEffect,useState } from "react";
 import { z } from "zod"
 
 import axios from 'axios'
@@ -16,6 +16,7 @@ const schema = z.object({
 
 export default function Login(){
     const navigate = useNavigate()
+    const [erros,setErros] = useState({})
 
 
     useEffect(() => {
@@ -61,12 +62,23 @@ export default function Login(){
                 <div className="container-form">
                     <h1>Login</h1>
                     <form action="" className="form" onSubmit={handleSubmit(handleLogin)}>
-                        <div>
-                            <input type="text" name="" id="" className="input_text" placeholder="Username"  {...register("username")} />
+                        <div className="input-error-container">
+                            <label  className="label">Digite seu usuário
+                                <input type="text" name="" id="" className={errors.username ? `error-container-input`:`input_text` } placeholder="Username"  {...register("username")} />
+                            </label>
+                            <div className="error-container">
+                                {errors.username && <span className="error-span">{errors.username.message}</span>}
+                            </div>
                         </div>
 
-                        <div>
-                            <input type="password" name="" id="" className="input_text" placeholder="Password" {...register("password")}/>
+                        <div className="input-error-container">
+                            <label className="label">Digite sua senha
+                                <input type="password" name="" id="" className={errors.password ? `error-container-input`:`input_text`} placeholder="Password" {...register("password")}/>
+                            </label>
+                            <div className="error-container">
+                                {errors.password && <span className="error-span">{errors.password.message}</span>}
+                            </div>
+                            
                         </div>
                      
                         <button type="submit" className="input-submit">Entrar</button>

@@ -25,20 +25,12 @@
         display: flex
         justify-content: center
         align-items: center
-    
-
 
         .form
             display: flex
             flex-direction: column
-            gap: 2rem
             align-items: center
 
-            .input_text
-                padding: 0.5rem 0.8rem
-                border: none
-                outline: none
-            
             .input-submit
                 padding: 0.5rem 0.5rem
                 width: 6rem
@@ -46,4 +38,37 @@
                 outline: none
                 background-color: $blue
                 color:$white
+
+            .input-error-container
+                display: flex
+                flex-direction: column
+                gap: 1rem
+                width: 15rem
+                padding: 1rem
+                align-items: center
+
+                .label
+                    font-size: 1.1rem
+                    
+
+                .error-container-input
+                    outline: none
+                    border: none
+                    padding: 0.5rem 0.8rem
+                    border: none
+                    outline: none
+                    border-bottom: 2px solid red
+
+                .error-container
+                    width: 11rem
+
+                    .error-span
+                        color: red
+                        font-weight: bold
+
+                .input_text
+                    padding: 0.5rem 0.9rem
+                    border: none
+                    outline: none
+                
 
