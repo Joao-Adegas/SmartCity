@@ -1,13 +1,14 @@
 import "../Ambientes/Ambientes.sass"
 import Modal from "../../components/Modal/Modal"
 import Swal from "sweetalert2"
-
+import { useNavigate } from "react-router-dom"
 import { useEffect, useState,useRef } from "react"
 import axios from "axios"
 
 export default function Ambientes(){
 
     const token = localStorage.getItem("token")
+    const navigate = useNavigate()
 
     const [editAmbiente,SetEditAmbiente] = useState(null)
 
@@ -21,6 +22,23 @@ export default function Ambientes(){
     const descricaoRef =useRef()
     const niRef = useRef()
     const responsavelRef = useRef()
+
+    const verificacaoToken = (token) => {
+
+        if (!token) {
+           Swal.fire({
+                title: 'Erro 401 - Não autorizado',
+                text: 'Você precisa estar logado para acessar esta página.',
+                icon: 'error',
+                confirmButtonText: 'OK',
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            }).then(() => {
+                navigate('/Login');
+            });
+        }
+        
+    } 
 
     const buscarAmbientes = () => {
             axios.get("http://127.0.0.1:8000/ambiente/",{
@@ -133,6 +151,7 @@ export default function Ambientes(){
 
     
     useEffect(()=>{
+        verificacaoToken(token)
         buscarAmbientes()
     },[])
 

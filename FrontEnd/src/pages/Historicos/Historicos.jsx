@@ -1,6 +1,7 @@
 import "../Ambientes/Ambientes.sass"
 
 import { useEffect, useState ,useRef} from "react"
+import { useNavigate } from "react-router-dom"
 import axios from "axios"
 import Modal from "../../components/Modal/Modal"
 import Swal from "sweetalert2"
@@ -8,19 +9,35 @@ import Swal from "sweetalert2"
 export default function Historicos(){
 
     const token = localStorage.getItem("token")
+    const navigate = useNavigate()
 
     const [historicos,setHistoricos] = useState([])
-
 
     const [editing,isEditing] = useState(false)
     const [modalOpen,setModalOpen] = useState(false)
     const [editHistorico,SetEditHistorico] = useState(null)
 
-
     const sensorRef = useRef()
     const ambienteRef =useRef()
     const valorRef = useRef()
     const timestampRef = useRef()
+
+    const verificacaoToken = (token) => {
+
+        if (!token) {
+           Swal.fire({
+                title: 'Erro 401 - Não autorizado',
+                text: 'Você precisa estar logado para acessar esta página.',
+                icon: 'error',
+                confirmButtonText: 'OK',
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            }).then(() => {
+                navigate('/Login');
+            });
+        }
+        
+    } 
 
     const buscarHistoricos = () => {
         axios.get("http://127.0.0.1:8000/historico/",{
@@ -136,6 +153,7 @@ export default function Historicos(){
     }
     
     useEffect(()=>{
+        verificacaoToken(token)
         buscarHistoricos()
     },[])
 

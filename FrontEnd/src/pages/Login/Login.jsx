@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect,useState } from "react";
 import { z } from "zod"
 
+import Swal from "sweetalert2";
 import axios from 'axios'
 
 const schema = z.object({
@@ -48,7 +49,14 @@ export default function Login(){
                 alert("Credenciais inválidas");
             }
         } catch (error) {
-            alert("Erro ao fazer login");
+              Swal.fire({
+                title: 'Erro 404 - Credenciais Inválidas',
+                text: 'Confira suas usuário e sua senha.',
+                icon: 'error',
+                confirmButtonText: 'OK',
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            })
         }
     };
 
@@ -63,8 +71,8 @@ export default function Login(){
                     <h1>Login</h1>
                     <form action="" className="form" onSubmit={handleSubmit(handleLogin)}>
                         <div className="input-error-container">
-                            <label  className="label">Digite seu usuário
-                                <input type="text" name="" id="" className={errors.username ? `error-container-input`:`input_text` } placeholder="Username"  {...register("username")} />
+                            <label  className="label">Usuário
+                                <input type="text" name="" id="" className={errors.username ? `error-container-input`:`input_text` } placeholder="Digite seu usuário"  {...register("username")} />
                             </label>
                             <div className="error-container">
                                 {errors.username && <span className="error-span">{errors.username.message}</span>}
@@ -72,8 +80,8 @@ export default function Login(){
                         </div>
 
                         <div className="input-error-container">
-                            <label className="label">Digite sua senha
-                                <input type="password" name="" id="" className={errors.password ? `error-container-input`:`input_text`} placeholder="Password" {...register("password")}/>
+                            <label className="label">Senha
+                                <input type="password" name="" id="" className={errors.password ? `error-container-input`:`input_text`} placeholder="Digite sua senha" {...register("password")}/>
                             </label>
                             <div className="error-container">
                                 {errors.password && <span className="error-span">{errors.password.message}</span>}
@@ -81,7 +89,18 @@ export default function Login(){
                             
                         </div>
                      
-                        <button type="submit" className="input-submit">Entrar</button>
+                        {/* <!-- From Uiverse.io by satyamchaudharydev -->  */}
+                        <button className="button">
+                        Apply Now
+                        <svg className="icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                            fillRule="evenodd"
+                            d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm4.28 10.28a.75.75 0 000-1.06l-3-3a.75.75 0 10-1.06 1.06l1.72 1.72H8.25a.75.75 0 000 1.5h5.69l-1.72 1.72a.75.75 0 101.06 1.06l3-3z"
+                            clipRule="evenodd"
+                            ></path>
+                        </svg>
+                        </button>
+
                     </form>
                 </div>
             </main>

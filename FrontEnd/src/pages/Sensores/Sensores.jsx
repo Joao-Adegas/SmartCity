@@ -2,6 +2,8 @@ import "../Sensores/Sensores.sass"
 import Swal from "sweetalert2"
 
 import { useState,useEffect,useRef } from "react"
+import { useNavigate } from "react-router-dom"
+
 import axios from 'axios'
 
 import Cedula from "../../components/Cedula/Cedula"
@@ -18,6 +20,7 @@ export default function Sensores(){
     const [status,setStatus] = useState(true)
 
     const token = localStorage.getItem("token")
+    const navigate = useNavigate()
 
     const sensorRef = useRef()
     const mac_addressRef = useRef()
@@ -25,6 +28,25 @@ export default function Sensores(){
     const latitudeRef  = useRef()
     const longitudeRef = useRef()
     const statusRef = useRef()
+
+
+    const verificacaoToken = (token) => {
+
+        if (!token) {
+           Swal.fire({
+                title: 'Erro 401 - Não autorizado',
+                text: 'Você precisa estar logado para acessar esta página.',
+                icon: 'error',
+                confirmButtonText: 'OK',
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            }).then(() => {
+                navigate('/Login');
+            });
+        }
+        
+    } 
+    
 
     const openEditModal = (sensor) => {
         SetEditSensor(sensor)
@@ -146,6 +168,7 @@ export default function Sensores(){
     }
 
     useEffect(()=>{
+        verificacaoToken(token)
         buscarSensores()
     },[])
 

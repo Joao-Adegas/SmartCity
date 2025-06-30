@@ -1,16 +1,18 @@
 import "../Dashboard/Dashboard.sass"
-import Aside from "../../components/aside/Aside"
 import Modal from "../../components/Modal/Modal"
 
 import axios from 'axios'
+import Swal from "sweetalert2"
 
 import { useState,useEffect,useRef } from "react"
+import { useNavigate } from "react-router-dom"
 
 export default function Dashboard(){
 
     const [modalOpen,setModalOpen] = useState(null)
     const [status,setStatus] = useState(true)
     const [importando, setImportando] = useState(false);
+    const [error401,setError401] = useState(false)
 
     const [sensor,setSensores] =  useState([]);
     const [ambiente,setAmbientes] =  useState([]);
@@ -26,6 +28,7 @@ export default function Dashboard(){
     const [arquivos, setArquivos] = useState(null)
 
     const token = localStorage.getItem("token")
+    const navigate = useNavigate()
  
     //Sensores
     const sensorRef = useRef()
@@ -52,6 +55,7 @@ export default function Dashboard(){
     const cleanerForm = () => {
         setTimeout(() => {
 
+            //Sensores
             if(sensorRef.current)sensorRef.current.value = ''
             if(mac_addressRef.current)mac_addressRef.current.value = ''
             if(unidade_medRef.current)unidade_medRef.current.value = ''
@@ -59,11 +63,13 @@ export default function Dashboard(){
             if(longitudeRef.current)longitudeRef.current.value = ''
             if(statusRef.current)statusRef.current.value = ''
 
+            //Ambientes
             if(sigRef.current)sigRef.current.value = ''
             if(descricaoRef.current)descricaoRef.current.value = ''
             if(niRef.current)niRef.current.value = ''
             if(responsavelRef.current)responsavelRef.current.value = ''
 
+            //Históricos
             if(sensoresRef.current)sensoresRef.current.value = ''
             if(ambientesRef.current)ambientesRef.current.value = ''
             if(valorRef.current)valorRef.current.value = ''
@@ -82,6 +88,23 @@ export default function Dashboard(){
         console.log("Modal fechado")
         setModalOpen(false)
     }
+
+    const verificacaoToken = (token) => {
+
+        if (!token) {
+           Swal.fire({
+                title: 'Erro 401 - Não autorizado',
+                text: 'Você precisa estar logado para acessar esta página.',
+                icon: 'error',
+                confirmButtonText: 'OK',
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            }).then(() => {
+                navigate('/Login');
+            });
+        }
+        
+    } 
     
     const buscarSensores = () => {
         axios.get("http://127.0.0.1:8000/sensor/",{
@@ -385,6 +408,7 @@ export default function Dashboard(){
 
 
     useEffect(()=>{
+        verificacaoToken(token)
         contarAmbientes()
         contarHistoricos()
         contarSensorTemperartura()
@@ -397,6 +421,7 @@ export default function Dashboard(){
     return(
         <>
             <main className="main-dashboard-page">
+                
                 {/* Alerta de processamento */}
 
                 {importando && (
