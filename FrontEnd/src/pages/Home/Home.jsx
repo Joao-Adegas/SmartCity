@@ -53,28 +53,28 @@ export default function Home(){
                     <div className="cards-sensores">
                         <div className="card-sensor">
                             <figure>
-                                <img src="../src/assets/umidade-img.png" alt="" srcset="" className="img-sensor"/>
+                                <img src="../src/assets/umidade-img.png" alt="" srcSet="" className="img-sensor"/>
                             </figure>
                             <p>Umidade</p>
                         </div>
                         <hr />
                         <div className="card-sensor">
                             <figure>
-                                <img src="../src/assets/temperatura-img.png" alt="" srcset="" className="img-sensor"/>
+                                <img src="../src/assets/temperatura-img.png" alt="" srcSet="" className="img-sensor"/>
                             </figure>
                             <p>Temperatura</p>
                         </div>
                         <hr />
                         <div className="card-sensor">
                             <figure>
-                                <img src="../src/assets/contador-img.png" alt="" srcset="" className="img-sensor"/>
+                                <img src="../src/assets/contador-img.png" alt="" srcSet="" className="img-sensor"/>
                             </figure>
                             <p>Contagem</p>
                         </div>
                         <hr />
                         <div className="card-sensor">
                             <figure>
-                                <img src="../src/assets/luminosidade-img.png" alt="" srcset="" className="img-sensor"/>
+                                <img src="../src/assets/luminosidade-img.png" alt="" srcSet="" className="img-sensor"/>
                             </figure>
                             <p>Luminosidade</p>
                         </div>
@@ -130,7 +130,7 @@ export default function Home(){
             <footer>
                 <div className="main-footer">
                     <figure>
-                        <img src="../src/assets/Logo.png" alt="" srcset="" className="Logo-footer"/>
+                        <img src="../src/assets/Logo.png" alt="" srcSet="" className="Logo-footer"/>
                     </figure>
 
                     <div>

@@ -2,12 +2,22 @@ import "../Sensores/Sensores.sass"
 import Swal from "sweetalert2"
 
 import { useState,useEffect,useRef } from "react"
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom"
-
+import { z } from "zod"
 import axios from 'axios'
 
 import Cedula from "../../components/Cedula/Cedula"
 import Modal from "../../components/Modal/Modal"
+
+const schema = z.object({
+    sensor : z.string().min(1, "Escolha um tipo de sensor"),
+    mac_address: z.string().nonempty("Preencha o endereço do sensor").regex(/^([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$/,"Formato do Endereço inválido"),
+    unidade_med:z.string().nonempty("Preencha a unidade de medida"),
+    latitude:z.string().nonempty("Preencha a Latitude"),
+    longitude:z.string().nonempty("Preencha a Longitude")
+})
 
 export default function Sensores(){
     const [sensores,setSensores] = useState([])
@@ -29,10 +39,10 @@ export default function Sensores(){
     const longitudeRef = useRef()
     const statusRef = useRef()
 
-
     const verificacaoToken = (token) => {
 
         if (!token) {
+            
            Swal.fire({
                 title: 'Erro 401 - Não autorizado',
                 text: 'Você precisa estar logado para acessar esta página.',
@@ -45,8 +55,15 @@ export default function Sensores(){
             });
         }
         
-    } 
-    
+    }
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm({
+        resolver: zodResolver(schema),
+    });
 
     const openEditModal = (sensor) => {
         SetEditSensor(sensor)
@@ -97,20 +114,27 @@ export default function Sensores(){
             setSensores(response.data)
         })
         .catch(error => {
-            console.log("Erro ao buscar sensores",error)
+            if (error.response?.status === 401) {
+                Swal.fire({
+                title: 'Seu token expirou',
+                text: 'Faça login novamente.',
+                icon: 'warning',
+                confirmButtonText: 'OK',
+                })
+                .then(() => {
+                    localStorage.removeItem("token");
+                    navigate('/Login');
+                });
+            } else {
+                console.log("Erro ao buscar sensores", error);
+            }
         })
     }
 
-    const handleSubmit = (e) =>{
-
-        e.preventDefault();
+    const handleSensor = (data) =>{
 
         const formData = {
-            sensor:sensorRef.current.value,
-            mac_address:mac_addressRef.current.value,
-            unidade_med:unidade_medRef.current.value,
-            latitude:latitudeRef.current.value,
-            longitude:longitudeRef.current.value,
+            ...data,
             status:status
         }
 
@@ -235,23 +259,57 @@ export default function Sensores(){
                     overlayClassName="custom-overlay"
                     ariaHideApp={true}
                 >
-                        <form action="" onSubmit={handleSubmit}>
+                        <form action="" onSubmit={handleSubmit(handleSensor)}>
                             <div className="modal-container">
                                 <h2> Cadastrar Sensor </h2>
                                 {error && <p className="erro-msg">{error}</p>}
-                                <select ref={sensorRef}>
-                                    <option value="" className="option"> Selecione um tipo de sensor </option>
-                                    <option value="temperatura" className="option"> temperatura </option>
-                                    <option value="umidade" className="option"> umidade </option>
-                                    <option value="luminosidade" className="option"> luminosidade </option>
-                                    <option value="contagem" className="option"> contagem </option>
-                                </select>
 
-                                <input type="text" name="" id="mac_address" placeholder="Digite o endereço" ref={mac_addressRef}/>
-                                <input type="text" name="" id="unidade_med" placeholder="Digite a unidade de medida" ref={unidade_medRef}/>
-                                <input type="text" name="" id="latitude" placeholder="Digite a Latitude" ref={latitudeRef}/>
-                                <input type="text" name="" id="longitude" placeholder="Digite a Longitude" ref={longitudeRef}/>
-                                
+                                <div className="container-input">
+                                    <select {...register("sensor")}>
+                                        <option value="" className="option"> Selecione um tipo de sensor </option>
+                                        <option value="temperatura" className="option"> temperatura </option>
+                                        <option value="umidade" className="option"> umidade </option>
+                                        <option value="luminosidade" className="option"> luminosidade </option>
+                                        <option value="contagem" className="option"> contagem </option>
+                                    </select>
+                                    <div className="container-error">
+                                        {errors.sensor && <span className="error">{errors.sensor.message}</span>}
+                                    </div>
+                                </div>
+
+                                <div className="container-input">
+                                    <input 
+                                    type="text"
+                                    id="mac_address" 
+                                    placeholder="Digite o endereço" 
+                                    {...register("mac_address")}
+                                    />
+                                    <div className="container-error">
+                                        {errors.mac_address && <span className="error">{errors.mac_address.message}</span>}
+                                    </div>
+                                </div>
+
+                                <div className="container-input">
+                                    <input type="text" name="" id="unidade_med" placeholder="Digite a unidade de medida" {...register("unidade_med")}/>
+                                    <div className="container-error">
+                                        {errors.latitude && <span className="error">{errors.latitude.message}</span>}
+                                    </div>
+                                </div>
+
+                                <div className="container-input">
+                                    <input type="text" name="" id="latitude" placeholder="Digite a Latitude" {...register("latitude")}/>
+                                    <div className="container-error">
+                                        {errors.latitude && <span className="error">{errors.latitude.message}</span>}
+                                    </div>
+                                </div>
+
+                                <div className="container-input">
+                                    <input type="text" name="" id="longitude" placeholder="Digite a Longitude" {...register("longitude")}/>
+                                    <div className="container-error">
+                                        {errors.longitude && <span className="error">{errors.latitude.message}</span>}
+                                    </div>
+                                </div>
+
                                 <div className="radio">
 
                                     <input
