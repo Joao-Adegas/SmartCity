@@ -1,9 +1,24 @@
 import "../Ambientes/Ambientes.sass"
+
 import Modal from "../../components/Modal/Modal"
 import Swal from "sweetalert2"
-import { useNavigate } from "react-router-dom"
-import { useEffect, useState,useRef } from "react"
 import axios from "axios"
+
+import { useNavigate } from "react-router-dom"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useEffect, useState,useRef } from "react"
+import { z } from "zod"
+
+const schema = z.object({
+    sig: z.string().min(1,"Preecha o sig do ambiente").regex(/^\d+$/,"o sig deve possuir apenas numeros"),
+    ni: z.string().min(1,"Preencha o NI do ambiente")
+    .regex(/(?=.*[A-Za-z])/,"O NI deve possui ao menos um número")
+    .regex(/(?=.*\d)/,"o NI deve possuir ao menos uma letra")
+    .regex(/[A-Za-z\d]+/,"O NI não deve ter nenhum outro caractere alem de letras e numeros"),
+    descricao: z.string().min(1,"Preecha a descrição do ambiente"),
+    responsavel:z.string().min(1,"Preencha o responsavel do ambiente")
+})
 
 export default function Ambientes(){
 
@@ -22,6 +37,14 @@ export default function Ambientes(){
     const descricaoRef =useRef()
     const niRef = useRef()
     const responsavelRef = useRef()
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm({
+        resolver: zodResolver(schema),
+    });
 
     const verificacaoToken = (token) => {
 
@@ -88,15 +111,11 @@ export default function Ambientes(){
         setModalOpen(false)
     }
 
- const handleSubmit = (e) =>{
+ const handleAbientes = (data) =>{
 
-        e.preventDefault();
-
+    
         const formData = {
-            sig:sigRef.current.value,
-            ni:niRef.current.value,
-            responsavel:responsavelRef.current.value,
-            descricao:descricaoRef.current.value,
+            ...data
         }
 
         if(editing){
@@ -224,11 +243,39 @@ export default function Ambientes(){
                     ariaHideApp={false}
                 >
                     <h2>Cadastrar Ambiente</h2>
-                    <form action="" onSubmit={handleSubmit}>
+                    <form action="" onSubmit={handleSubmit(handleAbientes)}>
                         <div className="modal-container">
-                            <input type="text" name="" id="sig" placeholder="Digite o sig" ref={sigRef}/>
-                            <input type="text" name="" id="NI" placeholder="Digite o NI" ref={niRef}/>
-                            <input type="text" name="" id="descricao" placeholder="Digite a descricao" ref={descricaoRef}/>
+
+                            <div className="container-input">
+                                <label htmlFor="">
+                                    Sig
+                                    <input 
+                                    type="text" 
+                                    id="sig" 
+                                    placeholder="Digite o sig" 
+                                    {...register("sig")}/>
+                                </label>
+
+                                <div className="container-error">
+                                    {errors.sig && <span className="error">{errors.sig.message}</span>}
+                                </div>
+                            </div>
+
+                            <div className="container-input">
+                                <input type="text" name="" id="NI" placeholder="Digite o NI" {...register("ni")}/>
+                                <div className="container-error">
+                                    {errors.ni && <span className="error">{errors.ni.message}</span>}
+                                </div>
+                            </div>
+
+                            <div className="container-input">
+                                <div className="container-input">
+                                    <input type="text" name="" id="descricao" placeholder="Digite a descricao" {...register("descricao")}/>
+                                </div>
+                                <div className="container-error">
+                                    {errors.descricao && <span className="error">{errors.descricao.message}</span>}
+                                </div>
+                            </div>
                             <input type="text" name="" id="responsavel" placeholder="Digite o responsavel" ref={responsavelRef}/>
                             <div className="btns-modal">
                                 <button type="submit" className="btn-modal">Cadastrar</button>

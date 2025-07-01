@@ -284,7 +284,6 @@ export default function Sensores(){
                                 <div className="container-input">
                                     <label htmlFor="">
                                         Digite o endereço
-
                                         <input 
                                         type="text"
                                         id="mac_address" 
@@ -308,14 +307,19 @@ export default function Sensores(){
                                 </div>
 
                                 <div className="container-input">
-                                    <input type="text" name="" id="latitude" placeholder="Digite a Latitude" {...register("latitude")}/>
+                                    <label htmlFor="">
+                                        Digite a Latitude
+                                        <input type="text" name="" id="latitude" placeholder="-23.55052" {...register("latitude")}/>
+                                    </label>
                                     <div className="container-error">
                                         {errors.latitude && <span className="error">{errors.latitude.message}</span>}
                                     </div>
                                 </div>
 
                                 <div className="container-input">
-                                    <input type="text" name="" id="longitude" placeholder="Digite a Longitude" {...register("longitude")}/>
+                                    <label htmlFor="">Digite a Longitude
+                                        <input type="text" name="" id="longitude" placeholder="-43.172896" {...register("longitude")}/>
+                                    </label>
                                     <div className="container-error">
                                         {errors.longitude && <span className="error">{errors.longitude.message}</span>}
                                     </div>

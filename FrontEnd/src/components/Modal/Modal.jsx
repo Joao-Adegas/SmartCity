@@ -14,7 +14,6 @@ export default function ModalComponent({isOpen,onClose,children}){
         shouldCloseOnOverlayClick={false}
         >
             {children}
-            
         </Modal>
     )
 }
