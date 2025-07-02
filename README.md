@@ -3,10 +3,10 @@
 # Smart City
 <br/>
 
-### Plataforma para gerenciamento de sensores , ambientes e histórico para uma cidade inteligente. Assim podendo realizar CRUD completo de Sensores ( temperaturam 🌡️, umidade💧, luminosidade💡 e contagem🔢), Ambientes e Históricos. A plataforma vem com um painel Dashboard para melhor vizualização de dados.
+### Platform for managing sensors, environments and history for a smart city. It can perform a complete CRUD of Sensors (temperature 🌡️, humidity💧, luminosity💡 and count🔢), Environments and Histories. The platform comes with a Dashboard for better data visualization.
 <br/>
 
-# Tecnologias ultilizadas
+# Technologies used
 ## BackEnd
 <br/>
 <img src="https://1000logos.net/wp-content/uploads/2020/08/Django-Logo.png" align="center" alt="django-icon" width="120" heigth="auto" style="margin-right: 20px;">
@@ -21,52 +21,52 @@
 
 <br/><br/>
 
-# Como iniciar o projeto
+# How to start the project
 
 
-## 1. Inciar o BackEnd
-### 1.1 Entre na pasta do BackEnd:
+## 1. start BackEnd
+### 1.1 Enter the BackEnd folder:
     cd ./SmartCity/BackEnd
 
-### 1.2 Instale o ambiente virtual:
+### 1.2 Install the virtual environment:
     python -m venv env
 
-### 1.3 Inicie o ambiente virtual
+### 1.3 Start the virtual environment:
     ./env/Scripts/activate
 
-### 1.4 Instale as bibliotecas presentes no requiremenmts.txt
+### 1.4 install the libraries from requirements.txt
     pip install -r requirements.txt
 
-### 1.5 Crie um super usuário (admin)
+### 1.5 Create a super user (admin)
     python manage.py createsuperuser
 
-### 1.6 Atualize o Banco de Dados db.sqlite3
+### 1.6 Update the db.sqlite3 database
     python manage.py makemigrations
     python manage.py migrate
 
-### 1.7 Inicie o BackEnd
+### 1.7 Start BackEnd
     python manage.py runserver
 
-## Backend esta rodadnom, agora volte para a raiz do projeto
+## Backend is running, now go back to the root of the project
     cd..
     cd..
 
-## 2. Iniciar FrontEnd
-### 2.1 Entre na pasta do FrontEnd
+## 2. Start FrontEnd
+### 2.1 Enter the FrontEnd folder
     ./SmartCity/FrontEnd
 
-### Instale as Bibliotecas usadas
+### Install the Libraries used
     npm i
 
-## Inicie o FrontEnd em React
+## Start the FrontEnd in React
     npm run dev
 
-## O projeto esta rodando !! Agora clique no link que foi fornecido no terminal.
+## The project is running! Now click on the link provided in the terminal.
 
     
 
-# Link documentação API Django 
+# Django API documentation link 
 https://documenter.getpostman.com/view/21570052/2sB2xBDpx8
 
-# Link Documentação
+# Link Documentação Project
 https://docs.google.com/document/d/1VO-hmSUhJF6IImUhMjrjvHk8TlAjtL2VxpymGZPjZlE/edit?tab=t.0
