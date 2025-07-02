@@ -74,7 +74,20 @@ export default function Ambientes(){
                 setAmbientes(response.data)
             })
             .catch(error => {
-                console.log("Erro ao buscar ambiente",error)
+                if (error.response?.status === 401) {
+                    Swal.fire({
+                    title: 'Seu token expirou',
+                    text: 'Faça login novamente.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK',
+                    })
+                    .then(() => {
+                        localStorage.removeItem("token");
+                        navigate('/Login');
+                    });
+                } else {
+                    console.log("Erro ao buscar sensores", error);
+                }
             })
     }
 
@@ -248,7 +261,7 @@ export default function Ambientes(){
 
                             <div className="container-input">
                                 <label htmlFor="">
-                                    Sig
+                                    Digite o sig
                                     <input 
                                     type="text" 
                                     id="sig" 
@@ -262,7 +275,10 @@ export default function Ambientes(){
                             </div>
 
                             <div className="container-input">
-                                <input type="text" name="" id="NI" placeholder="Digite o NI" {...register("ni")}/>
+                                <label htmlFor="">
+                                    Digite o NI
+                                    <input type="text" id="NI" placeholder="Digite o NI" {...register("ni")}/>
+                                </label>
                                 <div className="container-error">
                                     {errors.ni && <span className="error">{errors.ni.message}</span>}
                                 </div>
@@ -270,13 +286,25 @@ export default function Ambientes(){
 
                             <div className="container-input">
                                 <div className="container-input">
-                                    <input type="text" name="" id="descricao" placeholder="Digite a descricao" {...register("descricao")}/>
+                                    <label htmlFor="">
+                                        Digite a descrição
+                                        <input type="text" id="descricao" placeholder="Digite a descricao" {...register("descricao")}/>
+                                    </label>
                                 </div>
                                 <div className="container-error">
                                     {errors.descricao && <span className="error">{errors.descricao.message}</span>}
                                 </div>
                             </div>
-                            <input type="text" name="" id="responsavel" placeholder="Digite o responsavel" ref={responsavelRef}/>
+
+                            <div className="container-input">
+                                <label htmlFor="">
+                                    Digite o responsavel
+                                    <input type="text" name="" id="responsavel" placeholder="Digite o responsavel" {...register("responsavel")}/>
+                                </label>
+                                <div className="container-error">
+                                    {errors.responsavel && <span className="error">{errors.responsavel.message}</span>}
+                                </div>
+                            </div>
                             <div className="btns-modal">
                                 <button type="submit" className="btn-modal">Cadastrar</button>
                                 <button onClick={closeModal} className="btn-modal">Fechar</button>

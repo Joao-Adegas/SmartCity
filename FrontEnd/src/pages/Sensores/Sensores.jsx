@@ -299,7 +299,7 @@ export default function Sensores(){
                                 <div className="container-input">
                                     <label htmlFor="">
                                         Digite a unidade de medida
-                                        <input type="text" name="" id="unidade_med" placeholder="Digite a unidade de medida" {...register("unidade_med")}/>
+                                        <input type="text" name="" id="unidade_med" placeholder="(%,°C,uni)" {...register("unidade_med")}/>
                                     </label>
                                     <div className="container-error">
                                         {errors.unidade_med && <span className="error">{errors.unidade_med.message}</span>}

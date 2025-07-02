@@ -1,10 +1,21 @@
 import "../Ambientes/Ambientes.sass"
 
 import { useEffect, useState ,useRef} from "react"
+import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from "zod"
+
 import axios from "axios"
 import Modal from "../../components/Modal/Modal"
 import Swal from "sweetalert2"
+
+const schema = z.object({
+    sensor : z.string().min(1, "Digite o sensor"),
+    ambiente : z.string().min(1, "Digite o ambiente"),
+    valor: z.string().min(1,"Digite o valor"),
+    timestamp:z.string().min(1,"Digite o timestamp")
+})
 
 export default function Historicos(){
 
@@ -12,7 +23,6 @@ export default function Historicos(){
     const navigate = useNavigate()
 
     const [historicos,setHistoricos] = useState([])
-
     const [editing,isEditing] = useState(false)
     const [modalOpen,setModalOpen] = useState(false)
     const [editHistorico,SetEditHistorico] = useState(null)
@@ -21,6 +31,15 @@ export default function Historicos(){
     const ambienteRef =useRef()
     const valorRef = useRef()
     const timestampRef = useRef()
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm({
+        resolver: zodResolver(schema),
+    });
+
 
     const verificacaoToken = (token) => {
 
@@ -50,7 +69,20 @@ export default function Historicos(){
             setHistoricos(response.data)
         })
         .catch(error => {
-            console.log("Erro ao buscar ambiente",error)
+            if (error.response?.status === 401) {
+                Swal.fire({
+                title: 'Seu token expirou',
+                text: 'Faça login novamente.',
+                icon: 'warning',
+                confirmButtonText: 'OK',
+                })
+                .then(() => {
+                    localStorage.removeItem("token");
+                    navigate('/Login');
+                });
+            } else {
+                console.log("Erro ao buscar sensores", error);
+            }
         })
     }
 
@@ -86,15 +118,10 @@ export default function Historicos(){
         setModalOpen(false)
     }
 
- const handleSubmit = (e) =>{
-
-        e.preventDefault();
+ const handleHistorico = (data) =>{
 
         const formData = {
-            sensor:sensorRef.current.value,
-            ambientes:ambienteRef.current.value,
-            valor:valorRef.current.value,
-            timestamp:timestampRef.current.value,
+            ...data
         }
 
         if(editing){
@@ -226,16 +253,16 @@ export default function Historicos(){
                     overlayClassName="custom-overlay"
                     ariaHideApp={false}
                 >
-                        <form action="" onSubmit={handleSubmit}>
+                        <form action="" onSubmit={handleSubmit(handleHistorico)}>
                             <div className="modal-container">
                                 <h2> Cadastrar Histórico </h2>
 
-                                <input type="text" name="" ref={sensorRef} id="sensor" placeholder="Digite o id do sensor"/>
-                                <input type="text" name="" ref={ambienteRef} id="ambientes" placeholder="Digite o id do Ambiente"/>
-                                <input type="text" name="" ref={valorRef} id="valor" placeholder="Digite o valor"/>
-                                <input type="text" name="" ref={timestampRef} id="timestamp" placeholder="Digite o timestamp"/>
+                                <input type="text" name="" {...register("sensor")} id="sensor" placeholder="Digite o id do sensor"/>
+                                <input type="text" name="" {...register("ambiente")} id="ambientes" placeholder="Digite o id do Ambiente"/>
+                                <input type="text" name="" {...register("valor")} id="valor" placeholder="Digite o valor"/>
+                                <input type="text" name="" {...register("timestamp")} id="timestamp" placeholder="Digite o timestamp"/>
 
-                                <div className="btns-modal">
+                                <div className="btns-modal"> 
                                     <button className="btn-modal" type="submit">Salvar</button>
                                     <button onClick={closeModal} className="btn-modal">Fechar</button>
                                 </div>
