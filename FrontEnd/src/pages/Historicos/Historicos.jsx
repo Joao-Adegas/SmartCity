@@ -42,7 +42,6 @@ export default function Historicos(){
 
 
     const verificacaoToken = (token) => {
-
         if (!token) {
            Swal.fire({
                 title: 'Erro 401 - Não autorizado',
@@ -55,7 +54,6 @@ export default function Historicos(){
                 navigate('/Login');
             });
         }
-        
     } 
 
     const buscarHistoricos = () => {

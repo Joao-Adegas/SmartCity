@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom"
 import { z } from "zod"
 import axios from 'axios'
 
-import Cedula from "../../components/Cedula/Cedula"
 import Modal from "../../components/Modal/Modal"
 
 const schema = z.object({

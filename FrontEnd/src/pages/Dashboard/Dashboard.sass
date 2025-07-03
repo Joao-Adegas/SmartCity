@@ -30,19 +30,45 @@
                 display: flex
                 gap: 1rem     
 
-                .btn-dashboard
-                    border: none
-                    outline: none
+                .btn-dashboard 
                     display: flex
+                    position: relative
+                    gap: 1rem
+                    justify-content: center
                     align-items: center
-                    gap: 0.3rem
-                    padding: 0.5rem 1rem    
-                    background-color: $blue
-                    color: $white 
-                    font-weight: 700
-                    font-size: 0.9rem
+                    cursor: pointer
+                    background-color: #042D51
+                    color: #fff
+                    border-style: none
+                    padding: 0.6rem
+                    overflow: hidden
+                    z-index: 1
+                    box-shadow: 4px 8px 10px -3px rgba(0, 0, 0, 0.356)
+                    transition: all 250ms
+
+                    .span-btn-import
+                        font-weight: 400
+                        font-size: 0.9rem
+                
+                .btn-dashboard input[type="file"] 
+                    position: absolute
+                    width: 100%
+                    height: 100%
+                    opacity: 0
                     cursor: pointer
             
+                .btn-dashboard::before 
+                    content: ""
+                    position: absolute
+                    height: 100%
+                    width: 0
+                    background-color:#1A4265
+                    z-index: -1
+                    transition: all 350ms
+                
+                .btn-dashboard:hover::before 
+                    width: 100%
+
         .container-cards-dashboard
             display: flex
             width: 100%

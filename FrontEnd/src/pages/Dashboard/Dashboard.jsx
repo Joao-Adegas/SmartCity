@@ -117,7 +117,20 @@ export default function Dashboard(){
             setSensores(response.data)
         })
         .catch(error => {
-            console.log("Erro ao buscar sensores",error)
+            if (error.response?.status === 401) {
+                Swal.fire({
+                title: 'Seu token expirou',
+                text: 'Faça login novamente.',
+                icon: 'warning',
+                confirmButtonText: 'OK',
+                })
+                .then(() => {
+                    localStorage.removeItem("token");
+                    navigate('/Login');
+                });
+            } else {
+                console.log("Erro ao buscar sensores", error);
+            }
         })
     }
 
@@ -132,7 +145,20 @@ export default function Dashboard(){
             setAmbientes(response.data)
         })
         .catch(error => {
-            console.log("Erro ao buscar ambiente",error)
+            if (error.response?.status === 401) {
+                Swal.fire({
+                title: 'Seu token expirou',
+                text: 'Faça login novamente.',
+                icon: 'warning',
+                confirmButtonText: 'OK',
+                })
+                .then(() => {
+                    localStorage.removeItem("token");
+                    navigate('/Login');
+                });
+            } else {
+                console.log("Erro ao buscar sensores", error);
+            }
         })
     }
 
@@ -147,7 +173,20 @@ export default function Dashboard(){
             setHistoricos(response.data)
         })
         .catch(error => {
-            console.log("Erro ao buscar ambiente",error)
+            if (error.response?.status === 401) {
+                Swal.fire({
+                title: 'Seu token expirou',
+                text: 'Faça login novamente.',
+                icon: 'warning',
+                confirmButtonText: 'OK',
+                })
+                .then(() => {
+                    localStorage.removeItem("token");
+                    navigate('/Login');
+                });
+            } else {
+                console.log("Erro ao buscar sensores", error);
+            }
         })
     }
     
@@ -247,7 +286,23 @@ export default function Dashboard(){
         }).then(response => {
             console.log("Historicos:"+ response.data.quantidade)
             setQuantidadeHistoricos(response.data.quantidade);
-        });
+        })
+        .catch(error => {
+            if (error.response?.status === 401) {
+                Swal.fire({
+                title: 'Seu token expirou',
+                text: 'Faça login novamente.',
+                icon: 'warning',
+                confirmButtonText: 'OK',
+                })
+                .then(() => {
+                    localStorage.removeItem("token");
+                    navigate('/Login');
+                });
+            } else {
+                console.log("Erro ao buscar sensores", error);
+            }
+        })
     }
 
     const contarSensorTemperartura = () =>{
@@ -256,7 +311,23 @@ export default function Dashboard(){
         }).then(response => {
             console.log("Sensores de temperatura:" + response.data.temperatura)
             setQuantidadeSensorTemperatura(response.data.temperatura);
-        });
+        })
+        .catch(error => {
+            if (error.response?.status === 401) {
+                Swal.fire({
+                title: 'Seu token expirou',
+                text: 'Faça login novamente.',
+                icon: 'warning',
+                confirmButtonText: 'OK',
+                })
+                .then(() => {
+                    localStorage.removeItem("token");
+                    navigate('/Login');
+                });
+            } else {
+                console.log("Erro ao buscar sensores", error);
+            }
+        })
     }
     const contarSensorUmidade = () =>{
         axios.get("http://127.0.0.1:8000/quantidade_sensor_umidade/", {
@@ -264,7 +335,23 @@ export default function Dashboard(){
         }).then(response => {
             console.log("Sensores de umidade:" + response.data.umidade)
             setQuantidadeSensorUmidade(response.data.umidade);
-        });
+        })
+        .catch(error => {
+            if (error.response?.status === 401) {
+                Swal.fire({
+                title: 'Seu token expirou',
+                text: 'Faça login novamente.',
+                icon: 'warning',
+                confirmButtonText: 'OK',
+                })
+                .then(() => {
+                    localStorage.removeItem("token");
+                    navigate('/Login');
+                });
+            } else {
+                console.log("Erro ao buscar sensores", error);
+            }
+        })
     }
     const contarSensorLuminosidade = () =>{
         axios.get("http://127.0.0.1:8000/quantidade_sensor_luminosidade/", {
@@ -280,7 +367,23 @@ export default function Dashboard(){
         }).then(response => {
             console.log("Sensores de contagem:" + response.data.contagem)
             setQuantidadeSensorContagem(response.data.contagem);
-        });
+        })
+        .catch(error => {
+            if (error.response?.status === 401) {
+                Swal.fire({
+                title: 'Seu token expirou',
+                text: 'Faça login novamente.',
+                icon: 'warning',
+                confirmButtonText: 'OK',
+                })
+                .then(() => {
+                    localStorage.removeItem("token");
+                    navigate('/Login');
+                });
+            } else {
+                console.log("Erro ao buscar sensores", error);
+            }
+        })
     }
 
     const exportarSensores = () => {
@@ -386,7 +489,7 @@ export default function Dashboard(){
             }
         })
         .then(res => {
-            alert(res.data.mensagem);
+            Swal.fire(res.data.mensagem);
             if (res.data.erros) {
                 console.log("Tipo recebido na função importarArquivos:", tipo)
             }
@@ -450,20 +553,22 @@ export default function Dashboard(){
                         </div>
                         <div className="options">
                             
-                            <button className="btn-dashboard" onClick={exportarSensores}>Exportar <img src="../src/assets/exel-icon.png" alt="add_icon" /></button>
-
-                            <input
+                            <button className="btn-dashboard"  onClick={exportarSensores}>
+                                <img src="../src/assets/exel-icon.png" alt="add_icon" className="img-btn"/>
+                                Exportar 
+                                <input
                                 id="file-upload-sensores"
                                 type="file"
                                 multiple
                                 accept=".xlsx"
                                 style={{ display: 'none' }}
                                 onChange={(e) => (importarArquivos(e,"sensores"))}
-                            />
+                                />
+                            </button>
 
-                            <label htmlFor="file-upload-sensores" className="btn-dashboard custom-upload-button">
-                                <img src="../src/assets/xls-icon.png" alt="Upload Icon" />
-                                <span>Importar</span>
+                            <label htmlFor="file-upload-sensores" className="btn-dashboard">
+                                <img src="../src/assets/xls-icon.png" alt="Upload Icon" className="img-btn"/>
+                                <span className="span-btn-import">Importar</span>
                             </label>
 
                         </div>
@@ -497,20 +602,24 @@ export default function Dashboard(){
                         </div>
                         <div className="options">
                             
-                            <button className="btn-dashboard" onClick={exportarAmbientes}>Exportar <img src="../src/assets/exel-icon.png" alt="add_icon" /></button>
-                            <input
-                            id="file-upload-ambientes"
-                            type="file"
-                            multiple
-                            accept=".xlsx"
-                            style={{ display: 'none' }}
-                            onChange={(e) => (importarArquivos(e,"ambientes"))}
-                        />
+                            <button className="btn-dashboard"  onClick={exportarAmbientes}>
+                                <img src="../src/assets/exel-icon.png" alt="add_icon" className="img-btn"/>
+                                Exportar 
+                                <input
+                                id="file-upload-ambientes"
+                                type="file"
+                                multiple
+                                accept=".xlsx"
+                                style={{ display: 'none' }}
+                                onChange={(e) => (importarArquivos(e,"ambientes"))}
+                                />
+                            </button>
 
-                        <label htmlFor="file-upload-ambientes" className="btn-dashboard custom-upload-button">
-                            <img src="../src/assets/xls-icon.png" alt="Upload Icon" />
-                            <span>Importar</span>
-                        </label>
+
+                            <label htmlFor="file-upload-ambientes" className="btn-dashboard custom-upload-button">
+                                <img src="../src/assets/xls-icon.png" alt="Upload Icon" />
+                                <span className="span-btn-import">Importar</span>
+                            </label>
 
                         </div>
                     </div>
@@ -529,26 +638,30 @@ export default function Dashboard(){
                         <div className="title-container-dashboard">
                             <h1 className="title-container-card">Históricos</h1>
                         </div>
+
                         <div className="options">
                             
-                            <button className="btn-dashboard"  onClick={exportarHistorico}>Exportar <img src="../src/assets/exel-icon.png" alt="add_icon" /></button>
-                            
-                            <input
-                            id="file-upload-historico"
-                            type="file"
-                            multiple
-                            accept=".xlsx"
-                            style={{ display: 'none' }}
-                             onChange={(e) => (importarArquivos(e,"historicos"))}
-                        />
+                            <button className="btn-dashboard"  onClick={exportarHistorico}>
+                                <img src="../src/assets/exel-icon.png" alt="add_icon" className="img-btn"/>
+                                Exportar 
+                                <input
+                                id="file-upload-historico"
+                                type="file"
+                                multiple
+                                accept=".xlsx"
+                                style={{ display: 'none' }}
+                                onChange={(e) => (importarArquivos(e,"historicos"))}
+                                />
+                            </button>
 
-                        <label htmlFor="file-upload-historico" className="btn-dashboard custom-upload-button">
-                            <img src="../src/assets/xls-icon.png" alt="Upload Icon" />
-                            <span>Importar</span>
-                        </label>
+                            <label htmlFor="file-upload-historico" className="btn-dashboard">
+                                <img src="../src/assets/xls-icon.png" alt="Upload Icon" className="img-btn"/>
+                                <span className="span-btn-import">Importar</span>
+                            </label>
 
                         </div>
                     </div>
+
                     <div className="container-cards-dashboard">
                         <div className="card">
                             <h2 className="sensor-quantity-card">{quantidadeHistoricos}</h2>
