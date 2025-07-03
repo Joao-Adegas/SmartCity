@@ -11,7 +11,7 @@ import axios from 'axios'
 
 const schema = z.object({
     username: z.string().min(3, "O nome deve ter pelo menos três caracteres"),
-    password: z.string().min(3, "A senha deve ter pelo menos seis caracteres"),
+    password: z.string().min(6, "A senha deve ter pelo menos seis caracteres"),
 })
 
 

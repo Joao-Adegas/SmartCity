@@ -167,8 +167,9 @@ export default function Sensores(){
                 closeModal()
             })
             .catch(error =>{
-                console.log("Erro ao criar um sensor",Object.values(error.response.data)?.[0]?.[0] || "Erro inesperado")
-                setError(error)
+                console.log("Erro ao criar um sensor",Object.values(error.response.data)[0][0])
+                // let erro = Object.values(error.response.data)[0][0]
+                
             })
         }
 
@@ -266,7 +267,7 @@ export default function Sensores(){
 
                                 <div className="container-input">
                                     <label htmlFor="">Selecione um tipo de Sensor
-                                        <select {...register("sensor")}>
+                                        <select {...register("sensor")} className={errors.sensor ? `error-container-input`:``} >
                                             <option value="" className="option">Selecione</option>
                                             <option value="temperatura" className="option"> temperatura </option>
                                             <option value="umidade" className="option"> umidade </option>
@@ -286,7 +287,8 @@ export default function Sensores(){
                                         <input 
                                         type="text"
                                         id="mac_address" 
-                                        placeholder="00:1B:44:11:3A:BA" 
+                                        placeholder="00:1B:44:11:3A:BA"
+                                        className={errors.mac_address ? `error-container-input`:``} 
                                         {...register("mac_address")}
                                         />
                                     </label>
@@ -298,7 +300,13 @@ export default function Sensores(){
                                 <div className="container-input">
                                     <label htmlFor="">
                                         Digite a unidade de medida
-                                        <input type="text" name="" id="unidade_med" placeholder="(%,°C,uni)" {...register("unidade_med")}/>
+                                        <input 
+                                        type="text" 
+                                        name="" 
+                                        id="unidade_med" 
+                                        placeholder="(%,°C,uni)"  
+                                        className={errors.unidade_med ? `error-container-input`:``}  
+                                        {...register("unidade_med")}/>
                                     </label>
                                     <div className="container-error">
                                         {errors.unidade_med && <span className="error">{errors.unidade_med.message}</span>}
@@ -308,7 +316,13 @@ export default function Sensores(){
                                 <div className="container-input">
                                     <label htmlFor="">
                                         Digite a Latitude
-                                        <input type="text" name="" id="latitude" placeholder="-23.55052" {...register("latitude")}/>
+                                        <input 
+                                        type="text" 
+                                        name="" 
+                                        id="latitude" 
+                                        placeholder="-23.55052"
+                                        className={errors.latitude ? `error-container-input`:``} 
+                                        {...register("latitude")}/>
                                     </label>
                                     <div className="container-error">
                                         {errors.latitude && <span className="error">{errors.latitude.message}</span>}
@@ -317,7 +331,13 @@ export default function Sensores(){
 
                                 <div className="container-input">
                                     <label htmlFor="">Digite a Longitude
-                                        <input type="text" name="" id="longitude" placeholder="-43.172896" {...register("longitude")}/>
+                                        <input 
+                                        type="text" 
+                                        name="" 
+                                        id="longitude" 
+                                        placeholder="-43.172896" 
+                                        className={errors.longitude ? `error-container-input`:``} 
+                                        {...register("longitude")}/>
                                     </label>
                                     <div className="container-error">
                                         {errors.longitude && <span className="error">{errors.longitude.message}</span>}

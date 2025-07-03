@@ -27,7 +27,7 @@ export default function Aside(){
                     </div>
 
                     <div className="container-name-user">
-                        <h3 className="name-user">{name.toUpperCase()}</h3>
+                        <h3 className="name-user">{name}</h3>
                     </div>
 
                 </div>
