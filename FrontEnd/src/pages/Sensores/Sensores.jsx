@@ -168,7 +168,7 @@ export default function Sensores(){
             })
             .catch(error =>{
                 console.log("Erro ao criar um sensor",Object.values(error.response.data)[0][0])
-                // let erro = Object.values(error.response.data)[0][0]
+                let erro = Object.values(error.response.data)[0][0]
                 
             })
         }

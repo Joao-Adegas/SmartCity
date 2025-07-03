@@ -160,7 +160,8 @@ export default function Ambientes(){
                 closeModal()
             })
             .catch(error =>{
-                console.log("Erro ao criar um ambiente",Object.values(error.response.data)?.[0]?.[0] || "Erro inesperado")
+                console.log("Erro ao criar um ambiente",Object.values(error.response.data)[0][0])
+                let erro = Object.values(error.response.data)[0][0];
             })
         }
 
@@ -265,7 +266,8 @@ export default function Ambientes(){
                                     <input 
                                     type="text" 
                                     id="sig" 
-                                    placeholder="Digite o sig" 
+                                    placeholder="Digite o sig"
+                                    className={errors.sig ? `error-container-input`:``}  
                                     {...register("sig")}/>
                                 </label>
 
@@ -277,7 +279,12 @@ export default function Ambientes(){
                             <div className="container-input">
                                 <label htmlFor="">
                                     Digite o NI
-                                    <input type="text" id="NI" placeholder="Digite o NI" {...register("ni")}/>
+                                    <input 
+                                    type="text" 
+                                    id="NI" 
+                                    placeholder="Digite o NI"
+                                    className={errors.ni ? `error-container-input`:``} 
+                                    {...register("ni")}/>
                                 </label>
                                 <div className="container-error">
                                     {errors.ni && <span className="error">{errors.ni.message}</span>}
@@ -288,7 +295,11 @@ export default function Ambientes(){
                                 <div className="container-input">
                                     <label htmlFor="">
                                         Digite a descrição
-                                        <input type="text" id="descricao" placeholder="Digite a descricao" {...register("descricao")}/>
+                                        <input type="text" 
+                                        id="descricao" 
+                                        placeholder="Digite a descricao" 
+                                        className={errors.descricao ? `error-container-input`:``}
+                                        {...register("descricao")}/>
                                     </label>
                                 </div>
                                 <div className="container-error">
@@ -299,7 +310,11 @@ export default function Ambientes(){
                             <div className="container-input">
                                 <label htmlFor="">
                                     Digite o responsavel
-                                    <input type="text" name="" id="responsavel" placeholder="Digite o responsavel" {...register("responsavel")}/>
+                                    <input type="text" 
+                                    id="responsavel" 
+                                    placeholder="Digite o responsavel" 
+                                    className={errors.responsavel ? `error-container-input`:``}
+                                    {...register("responsavel")}/>
                                 </label>
                                 <div className="container-error">
                                     {errors.responsavel && <span className="error">{errors.responsavel.message}</span>}

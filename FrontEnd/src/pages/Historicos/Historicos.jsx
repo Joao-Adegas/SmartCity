@@ -257,7 +257,12 @@ export default function Historicos(){
 
                                 <div className="container-input">
                                     <label htmlFor="">Digite o Id
-                                        <input type="text" name="" {...register("sensor")} id="sensor" placeholder="Digite o id do sensor"/>
+                                        <input
+                                        type="text" 
+                                        {...register("sensor")} 
+                                        id="sensor"
+                                        className={errors.sensor ? `error-container-input`:``} 
+                                        placeholder="Digite o id do sensor"/>
                                     </label>
                                     <div className="container-error">
                                         {errors.sensor && <span className="error">{errors.sensor.message}</span>}
@@ -267,7 +272,13 @@ export default function Historicos(){
                                 <div className="container-input">
                                     <label htmlFor="">
                                         Digite o Ambiente
-                                        <input type="text" name="" {...register("ambiente")} id="ambientes" placeholder="Digite o id do Ambiente"/>
+                                        <input 
+                                        type="text"
+                                        {...register("ambiente")} 
+                                        id="ambientes"
+                                        placeholder="Digite o id do Ambiente"
+                                        className={errors.ambiente ? `error-container-input`:``}
+                                        />
                                     </label>
                                     <div className="container-error">
                                         {errors.ambiente && <span className="error">{errors.ambiente.message}</span>}
@@ -277,7 +288,14 @@ export default function Historicos(){
                                 <div className="container-input">
                                     <label htmlFor="">
                                         Digite o Valor
-                                        <input type="text" name="" {...register("valor")} id="valor" placeholder="Digite o valor"/>
+                                        <input 
+                                        type="text" 
+                                        {...register("valor")} 
+                                        id="valor" 
+                                        placeholder="Digite o valor"
+                                        className={errors.valor ? `error-container-input`:``}
+                                        />
+                                        
                                     </label>
                                     <div className="container-error">
                                         {errors.valor && <span className="error">{errors.valor.message}</span>}
@@ -286,7 +304,12 @@ export default function Historicos(){
                                 <div className="container-input">
                                     <label htmlFor="">
                                         Digite o timestamp
-                                        <input type="text" name="" {...register("timestamp")} id="timestamp" placeholder="Digite o timestamp"/>
+                                        <input 
+                                        type="text" 
+                                        {...register("timestamp")}
+                                        className={errors.timestamp ? `error-container-input`:``} 
+                                        id="timestamp" 
+                                        placeholder="Digite o timestamp"/>
                                     </label>
                                     <div className="container-error">
                                         {errors.timestamp && <span className="error">{errors.timestamp.message}</span>}
