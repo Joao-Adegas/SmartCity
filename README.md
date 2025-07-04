@@ -1,4 +1,6 @@
-![](./FrontEnd/src/assets/Logo.png)
+<p align="center">
+  <img src="./FrontEnd/src/assets/Logo.png" alt="Logo" width="350" height="350">
+</p>
 
 # Smart City
 
