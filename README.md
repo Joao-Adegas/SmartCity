@@ -1,4 +1,4 @@
-![](../SmartCity/FrontEnd/src/assets/Logo.png)
+![](./FrontEnd/src/assets/Logo.png)
 
 # Smart City
 
