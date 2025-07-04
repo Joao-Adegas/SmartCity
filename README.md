@@ -10,9 +10,9 @@
 ### BackEnd
 
 <p align="center">
-  <img src="https://1000logos.net/wp-content/uploads/2020/08/Django-Logo.png" alt="django-icon" width="120" style="margin-right: 40px;">
-  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzo4vK4D5nnq7lpwvbWJOzkdPI9Fj3oEHFHg&s" alt="django-icon" width="120" style="margin-right: 40px;">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/1869px-Python-logo-notext.svg.png" alt="python-icon" width="60">
+  <img src="https://1000logos.net/wp-content/uploads/2020/08/Django-Logo.png" alt="django-icon" width="120" style="margin-right: 1rem;">
+  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzo4vK4D5nnq7lpwvbWJOzkdPI9Fj3oEHFHg&s" alt="django-icon" width="120" style="margin-right: 1rem;">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/1869px-Python-logo-notext.svg.png" alt="python-icon" width="60"  style="margin-right: 1rem;">
 </p>
 
 ### FrontEnd
