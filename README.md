@@ -1,30 +1,30 @@
 ![](..//SmartCity/FrontEnd/src/assets/Logo.png)
 
 # Smart City
-<br/>
+
 
 ### Platform for managing sensors, environments and history for a smart city. It can perform a complete CRUD of Sensors (temperature 🌡️, humidity💧, luminosity💡 and count🔢), Environments and Histories. The platform comes with a Dashboard for better data visualization.
-<br/>
 
-# Technologies used
-## BackEnd
-<br/>
+
+### Technologies used
+### BackEnd
+
 <img src="https://1000logos.net/wp-content/uploads/2020/08/Django-Logo.png" align="center" alt="django-icon" width="120" heigth="auto" style="margin-right: 20px;">
 <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzo4vK4D5nnq7lpwvbWJOzkdPI9Fj3oEHFHg&s" alt="django-icon" width="120" heigth="auto" align="center" style="margin-right: 20px;">
 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/1869px-Python-logo-notext.svg.png" alt="django-icon" width="60" heigth="auto" align="center" style="margin-right: 20px;">
 
-## FrontEnd
-<br/>
+### FrontEnd
+
 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1150px-React-icon.svg.png" align="center" alt="django-icon" width="60" heigth="auto" style="margin-right: 20px;">
 <img src="https://img.icons8.com/fluent/512/vite.png" alt="django-icon" width="60" heigth="auto" align="center" style="margin-right: 20px;">
 <img src="https://img.icons8.com/color/512/sass.png" alt="django-icon" width="60" heigth="auto" align="center" style="margin-right: 20px;">
 
-<br/><br/>
-
-# How to start the project
 
 
-## 1. start BackEnd
+### How to start the project
+
+
+### 1. start BackEnd
 ### 1.1 Enter the BackEnd folder:
     cd ./SmartCity/BackEnd
 
@@ -47,26 +47,26 @@
 ### 1.7 Start BackEnd
     python manage.py runserver
 
-## Backend is running, now go back to the root of the project
+### Backend is running, now go back to the root of the project
     cd..
     cd..
 
-## 2. Start FrontEnd
+### 2. Start FrontEnd
 ### 2.1 Enter the FrontEnd folder
     ./SmartCity/FrontEnd
 
 ### Install the Libraries used
     npm i
 
-## Start the FrontEnd in React
+### Start the FrontEnd in React
     npm run dev
 
-## The project is running! Now click on the link provided in the terminal.
+### The project is running! Now click on the link provided in the terminal.
 
     
 
-# Django API documentation link 
+### Django API documentation link 
 https://documenter.getpostman.com/view/21570052/2sB2xBDpx8
 
-# Link Documentação Project
+### Link Documentação Project
 https://docs.google.com/document/d/1VO-hmSUhJF6IImUhMjrjvHk8TlAjtL2VxpymGZPjZlE/edit?tab=t.0
