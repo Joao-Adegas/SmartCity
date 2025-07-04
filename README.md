@@ -10,18 +10,19 @@
 ### BackEnd
 
 <p align="center">
-  <img src="https://1000logos.net/wp-content/uploads/2020/08/Django-Logo.png" alt="django-icon" width="120" style="margin-right: 20px;">
-  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzo4vK4D5nnq7lpwvbWJOzkdPI9Fj3oEHFHg&s" alt="django-icon" width="120" style="margin-right: 20px;">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/1869px-Python-logo-notext.svg.png" alt="django-icon" width="60" style="margin-right: 20px;">
+  <img src="https://1000logos.net/wp-content/uploads/2020/08/Django-Logo.png" alt="django-icon" width="120" style="margin-right: 40px;">
+  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzo4vK4D5nnq7lpwvbWJOzkdPI9Fj3oEHFHg&s" alt="django-icon" width="120" style="margin-right: 40px;">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/1869px-Python-logo-notext.svg.png" alt="python-icon" width="60">
 </p>
 
 ### FrontEnd
 
 <p align="center">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1150px-React-icon.svg.png" alt="react-icon" width="60" style="margin-right: 20px;">
-  <img src="https://img.icons8.com/fluent/512/vite.png" alt="vite-icon" width="60" style="margin-right: 20px;">
-  <img src="https://img.icons8.com/color/512/sass.png" alt="sass-icon" width="60" style="margin-right: 20px;">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1150px-React-icon.svg.png" alt="react-icon" width="60" style="margin-right: 40px;">
+  <img src="https://img.icons8.com/fluent/512/vite.png" alt="vite-icon" width="60" style="margin-right: 40px;">
+  <img src="https://img.icons8.com/color/512/sass.png" alt="sass-icon" width="60">
 </p>
+
 
 
 
