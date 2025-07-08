@@ -1,5 +1,7 @@
 import "../Dashboard/Dashboard.sass"
-import Modal from "../../components/Modal/Modal"
+import GraficoTemperatura from "../../components/GraficoTemperatura/GraficoTemperatura"
+import GraficoTimestamp from "../../components/GraficoTimestamp/GraficoTimestamp"
+
 
 import axios from 'axios'
 import Swal from "sweetalert2"
@@ -633,7 +635,7 @@ export default function Dashboard(){
 
 
                  {/* Container Histórico */}
-                  <div className="container">
+                <div className="container">
                     <div className="top-container">
                         <div className="title-container-dashboard">
                             <h1 className="title-container-card">Históricos</h1>
@@ -669,76 +671,21 @@ export default function Dashboard(){
                     </div>
 
                 </div>
+                
+                <div className="GraficosContainer">
+                        
+                    <div className="GraficoContainerTimestamp">
+                        <h1 className="title-container-grafico">Timestamp</h1>
+                        <GraficoTimestamp/>
+                    </div>
+                    <div className="Grafico-Container-Temperatura">
+                        <h1 className="title-container-grafico">Temperatura</h1>
+                        <GraficoTemperatura/>
+                    </div>
 
-                <Modal
-                    isOpen={modalOpen}
-                    onClose={closeModal}
-                    className="custom-modal"
-                    overlayClassName="custom-overlay"
-                    ariaHideApp={false}
-                >
-                    {/* Modal pra Sensores */}
-                    {modalOpen === "sensor" && (
-                        <form action="" onSubmit={cadatrarSensor}>
-                            <div className="modal-container">
-                                <h2> Cadastrar Sensor </h2>
+                </div>
 
-                                <select ref={sensorRef}>
-                                    <option value=""> Selecione um tipo de sensor </option>
-                                    <option value="temperatura"> temperatura </option>
-                                    <option value="umidade"> umidade </option>
-                                    <option value="luminosidade"> luminosidade </option>
-                                    <option value="contador"> contador </option>
-                                </select>
-
-                                <input type="text" name="" id="mac_address" placeholder="Digite o endereço" ref={mac_addressRef}/>
-                                <input type="text" name="" id="unidade_med" placeholder="Digite a unidade de medida" ref={unidade_medRef}/>
-                                <input type="text" name="" id="latitude" placeholder="Digite a Latitude" ref={latitudeRef}/>
-                                <input type="text" name="" id="longitude" placeholder="Digite a Longitude" ref={longitudeRef}/>
-                                
-                                <div className="radio">
-
-                                    <input
-                                    type="radio"
-                                    name="status"
-                                    value="ativo"
-                                    checked={status === true}
-                                    onChange={() => setStatus(true)}
-                                    />
-
-                                    <label htmlFor="">Ativo</label>
-
-                                    <input
-                                    type="radio"
-                                    name="status"
-                                    value="inativo"
-                                    checked={status === false}
-                                    onChange={() => setStatus(false)}
-                                    />
-
-                                    <label htmlFor="">Inativo</label>
-                                </div>
-
-                            </div>
-                            <button className="btn-modal" type="submit">Cadastrar</button>
-                        </form>
-                    )}
-
-                    {/* Modal pra Ambientes */}
-                    {modalOpen === "ambiente" && (
-                        <div>
-                            <h2>Cadastro de Ambiente</h2>
-                        </div>
-                    )}
-
-                    {/* Modal pra Históricos */}
-                    {modalOpen === "historico" &&(
-                        <div>
-                            <h2>Cadastro de histórico</h2>
-                        </div>
-                    )}
-
-                </Modal>
+                
 
             </main>
           
