@@ -23,6 +23,7 @@ export default function Sensores(){
 
     const [modalOpen,setModalOpen] = useState(false)
     const [editing,isEditing] = useState(false)
+    const [loader,setLoader] = useState(false)
 
     const [error,setError] = useState("")
     const [editSensor,SetEditSensor] = useState(null)
@@ -103,6 +104,7 @@ export default function Sensores(){
     }
 
     const buscarSensores = () => {
+        setLoader(true)
         axios.get("http://127.0.0.1:8000/sensor/",{
             headers:{
                 Authorization:`Bearer ${token}`
@@ -111,6 +113,7 @@ export default function Sensores(){
         .then(response => {
             console.log(response.data)
             setSensores(response.data)
+            setLoader(false)
         })
         .catch(error => {
             if (error.response?.status === 401) {
@@ -219,37 +222,46 @@ export default function Sensores(){
                     </div>
 
                     <div className="container-tabela">
-                            {sensores.length > 0 && (
-                            <ul className="ul-sensores">
-                                {sensores.map(a => (
-                                    <li key={a.id} className="li-sensores">
-                                        <div className="cedula-sesnores">
-
-                                            <h2>{a.sensor}</h2>
-                                            <h2>{a.mac_address}</h2>
-                                            <h2>{a.unidade_med}</h2>
-                                            <h2>{a.latitude}</h2>
-                                            <h2>{a.longitude}</h2>
-                                            <h2>{a.status ? "Ativo" : "Inativo"}</h2>
-
-                                            <div className="opcoes">
-                                                <button className="icon-opcoes" onClick={() => deletarSensor(a.id)}>
-                                                    <img src="../src/assets/lixo.png" alt="icon-delete" className="icon-actions"/>
-                                                </button>
-                                                <button className="icon-opcoes" onClick={() => openEditModal(a)}>
-                                                    <img src="../src/assets/lapis.png" alt="edit-icon" className="icon-actions"/>
-                                                </button>
-                                            </div>
-                                            
-                                        </div>
-
-                                    </li>
-                                ))}
-                        
-                            </ul>
-                        )}
-
+                    {loader ? (
+                        <div class="skeleton-row">
+                            <div class="skeleton-col skeleton-col-1"></div>
+                            <div class="skeleton-col skeleton-col-2"></div>
+                            <div class="skeleton-col skeleton-col-3"></div>
+                            <div class="skeleton-col skeleton-col-4"></div>
+                            <div class="skeleton-col skeleton-col-5"></div>
+                            <div class="skeleton-col skeleton-col-6"></div>
+                            <div class="skeleton-col skeleton-col-7"></div>
+                        </div>
+                    ) : (
+                        sensores.length > 0 ? (
+                        <ul className="ul-sensores">
+                            {sensores.map(a => (
+                            <li key={a.id} className="li-sensores">
+                                <div className="cedula-sesnores">
+                                <h2>{a.sensor}</h2>
+                                <h2>{a.mac_address}</h2>
+                                <h2>{a.unidade_med}</h2>
+                                <h2>{a.latitude}</h2>
+                                <h2>{a.longitude}</h2>
+                                <h2>{a.status ? "Ativo" : "Inativo"}</h2>
+                                <div className="opcoes">
+                                    <button className="icon-opcoes" onClick={() => deletarSensor(a.id)}>
+                                    <img src="../src/assets/lixo.png" alt="icon-delete" className="icon-actions" />
+                                    </button>
+                                    <button className="icon-opcoes" onClick={() => openEditModal(a)}>
+                                    <img src="../src/assets/lapis.png" alt="edit-icon" className="icon-actions" />
+                                    </button>
+                                </div>
+                                </div>
+                            </li>
+                            ))}
+                        </ul>
+                        ) : (
+                        <p>Nenhum sensor encontrado.</p>
+                        )
+                    )}
                     </div>
+
                     
                 </div>
 

@@ -107,4 +107,76 @@
                     font-weight: 400
                     color: $blue
 
-        
+.loader
+  position: absolute
+  top: 0
+  bottom: 0
+  left: 0
+  right: 0
+
+.loader-overlay
+  position: fixed
+  top: 0
+  left: 0
+  width: 100vw
+  height: 100vh
+  background-color: rgba(0, 0, 0, 0.4) // escurece a tela com transparência
+  z-index: 9999
+  display: flex
+  align-items: center
+  justify-content: center
+
+
+.jimu-primary-loading
+  &:before,
+  &:after
+    position: absolute
+    top: 0
+    content: ''
+
+  &:before
+    left: -19.992px
+
+  &:after
+    left: 19.992px
+    -webkit-animation-delay: 0.32s !important
+    animation-delay: 0.32s !important
+
+  &:before,
+  &:after,
+  & 
+    background: #ffffff
+    -webkit-animation: loading-keys-app-loading 0.8s infinite ease-in-out
+    animation: loading-keys-app-loading 0.8s infinite ease-in-out
+    width: 13.6px
+    height: 32px
+
+  text-indent: -9999em
+  margin: auto
+  position: absolute
+  right: calc(50% - 6.8px)
+  top: calc(50% - 16px)
+  -webkit-animation-delay: 0.16s !important
+  animation-delay: 0.16s !important
+
+@-webkit-keyframes loading-keys-app-loading
+  0%, 80%, 100%
+    opacity: .75
+    box-shadow: 0 0 #ffffff
+    height: 32px
+
+  40%
+    opacity: 1
+    box-shadow: 0 -8px #ffffff
+    height: 40px
+
+@keyframes loading-keys-app-loading
+  0%, 80%, 100%
+    opacity: .75
+    box-shadow: 0 0 #ffffff
+    height: 32px
+
+  40%
+    opacity: 1
+    box-shadow: 0 -8px #ffffff
+    height: 40px

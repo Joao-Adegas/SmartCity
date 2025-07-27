@@ -14,11 +14,13 @@ export default function Dashboard(){
     const [modalOpen,setModalOpen] = useState(null)
     const [status,setStatus] = useState(true)
     const [importando, setImportando] = useState(false);
+    const [loader,setLoader] = useState(false);
     const [error401,setError401] = useState(false)
 
     const [sensor,setSensores] =  useState([]);
     const [ambiente,setAmbientes] =  useState([]);
     const [historico,setHistoricos] =  useState([]);
+
 
     const [quantidadeAmbientes,setQuantidadeAmbientes] = useState(0)
     const [quantidadeHistoricos,setQuantidadeHistoricos] = useState(0)
@@ -283,6 +285,7 @@ export default function Dashboard(){
         });
     }
     const contarHistoricos = () =>{
+        setLoader(true)
         axios.get("http://127.0.0.1:8000/quantidade_historicos/", {
             headers: { Authorization: `Bearer ${token}` }
         }).then(response => {
@@ -308,9 +311,11 @@ export default function Dashboard(){
     }
 
     const contarSensorTemperartura = () =>{
+        setLoader(true)
         axios.get("http://127.0.0.1:8000/quantidade_sensor_temperatura/", {
             headers: { Authorization: `Bearer ${token}` }
         }).then(response => {
+            setLoader(false)
             console.log("Sensores de temperatura:" + response.data.temperatura)
             setQuantidadeSensorTemperatura(response.data.temperatura);
         })
@@ -331,7 +336,9 @@ export default function Dashboard(){
             }
         })
     }
+
     const contarSensorUmidade = () =>{
+        setLoader(true)
         axios.get("http://127.0.0.1:8000/quantidade_sensor_umidade/", {
             headers: { Authorization: `Bearer ${token}` }
         }).then(response => {
@@ -347,6 +354,7 @@ export default function Dashboard(){
                 confirmButtonText: 'OK',
                 })
                 .then(() => {
+                    setLoader(false)
                     localStorage.removeItem("token");
                     navigate('/Login');
                 });
@@ -356,17 +364,21 @@ export default function Dashboard(){
         })
     }
     const contarSensorLuminosidade = () =>{
+        setLoader(true)
         axios.get("http://127.0.0.1:8000/quantidade_sensor_luminosidade/", {
             headers: { Authorization: `Bearer ${token}` }
         }).then(response => {
+            setLoader(false)
             console.log("Sensores de luminosidade:" + response.data.luminosidade)
             setQuantidadeSensorLuminosidade(response.data.luminosidade);
         });
     }
     const contarSensorContagem = () =>{
+        setLoader(true)
         axios.get("http://127.0.0.1:8000/quantidade_sensor_contagem/", {
             headers: { Authorization: `Bearer ${token}` }
         }).then(response => {
+            setLoader(false)
             console.log("Sensores de contagem:" + response.data.contagem)
             setQuantidadeSensorContagem(response.data.contagem);
         })
@@ -530,21 +542,11 @@ export default function Dashboard(){
                 {/* Alerta de processamento */}
 
                 {importando && (
-                <Modal
-                    isOpen={importando}
-                    onClose={closeModal}
-                    className="import-loading-alert"
-                    overlayClassName="custom-overlay"
-                    ariaHideApp={false}
-                    style={{ display: "flex" }}
-                   
-                >
-                    <div style={{ display: "flex" ,alignItems:"center",}}>
-                        <h1>Importando arquivos...</h1>
-                        <img src="../src/assets/gifLoading.gif" alt="gif-loading" srcSet="" className="gifLoading" style={{ width: "100px", height: "auto" }}/>
-                    </div>
-
-                </Modal>
+                    <>
+                        <div class="loader-overlay">
+                            <div class="justify-content-center jimu-primary-loading"></div>
+                        </div>
+                    </>
                 )}
                 
                 {/* Container Sensores */}
@@ -553,32 +555,45 @@ export default function Dashboard(){
                         <div className="title-container-dashboard">
                             <h1 className="title-container-card">Sensores</h1>
                         </div>
+
                         <div className="options">
-                            
-                            <button className="btn-dashboard"  onClick={exportarSensores}>
-                                <img src="../src/assets/exel-icon.png" alt="add_icon" className="img-btn"/>
+                            {/* Botão de exportar */}
+                            <button className="btn-dashboard" onClick={exportarSensores}>
+                                <img src="../src/assets/exel-icon.png" alt="add_icon" className="img-btn" />
                                 Exportar 
-                                <input
+                            </button>
+
+                            {/* Botão de importar */}
+                            <input
                                 id="file-upload-sensores"
                                 type="file"
                                 multiple
                                 accept=".xlsx"
                                 style={{ display: 'none' }}
-                                onChange={(e) => (importarArquivos(e,"sensores"))}
-                                />
-                            </button>
-
+                                onChange={(e) => importarArquivos(e, "sensores")}
+                            />
                             <label htmlFor="file-upload-sensores" className="btn-dashboard">
-                                <img src="../src/assets/xls-icon.png" alt="Upload Icon" className="img-btn"/>
+                                <img src="../src/assets/xls-icon.png" alt="Upload Icon" className="img-btn" />
                                 <span className="span-btn-import">Importar</span>
                             </label>
-
                         </div>
+
                     </div>
                     <div className="container-cards-dashboard">
                         <div className="card">
                             <p className="sensor-p-card">Temperatura</p>
-                            <h2 className="sensor-quantity-card">{quantidadeSensorTemperatura}</h2>
+                            <h2 className="sensor-quantity-card">
+                                {loader ? (
+                                    <>
+                                        <div class="relative flex w-64 animate-pulse gap-2 p-4">
+                                        <div class="flex-1">
+                                        <div class="h-12 w-[60%] rounded-lg bg-slate-400 text-sm"></div>
+                                        </div>
+
+                                        </div>
+                                    </>
+                                ): (  quantidadeSensorTemperatura )}
+                            </h2>
                         </div>
                         <div className="card">
                             <p className="sensor-p-card">Umidade</p>
@@ -603,26 +618,25 @@ export default function Dashboard(){
                             <h1 className="title-container-card">Ambientes</h1>
                         </div>
                         <div className="options">
-                            
-                            <button className="btn-dashboard"  onClick={exportarAmbientes}>
-                                <img src="../src/assets/exel-icon.png" alt="add_icon" className="img-btn"/>
+                            {/* Botão de exportar */}
+                            <button className="btn-dashboard" onClick={exportarSensores}>
+                                <img src="../src/assets/exel-icon.png" alt="add_icon" className="img-btn" />
                                 Exportar 
-                                <input
+                            </button>
+
+                            {/* Botão de importar */}   
+                            <input
                                 id="file-upload-ambientes"
                                 type="file"
                                 multiple
                                 accept=".xlsx"
                                 style={{ display: 'none' }}
-                                onChange={(e) => (importarArquivos(e,"ambientes"))}
-                                />
-                            </button>
-
-
-                            <label htmlFor="file-upload-ambientes" className="btn-dashboard custom-upload-button">
-                                <img src="../src/assets/xls-icon.png" alt="Upload Icon" />
+                                onChange={(e) => importarArquivos(e, "ambientes")}
+                            />
+                            <label htmlFor="file-upload-ambientes" className="btn-dashboard">
+                                <img src="../src/assets/xls-icon.png" alt="Upload Icon" className="img-btn" />
                                 <span className="span-btn-import">Importar</span>
                             </label>
-
                         </div>
                     </div>
                     <div className="container-cards-dashboard">
@@ -642,26 +656,28 @@ export default function Dashboard(){
                         </div>
 
                         <div className="options">
-                            
-                            <button className="btn-dashboard"  onClick={exportarHistorico}>
-                                <img src="../src/assets/exel-icon.png" alt="add_icon" className="img-btn"/>
+                            {/* Botão de exportar */}
+                            <button className="btn-dashboard" onClick={exportarSensores}>
+                                <img src="../src/assets/exel-icon.png" alt="add_icon" className="img-btn" />
                                 Exportar 
-                                <input
+                            </button>
+
+                            {/* Botão de importar */}
+                            <input
                                 id="file-upload-historico"
                                 type="file"
                                 multiple
                                 accept=".xlsx"
                                 style={{ display: 'none' }}
-                                onChange={(e) => (importarArquivos(e,"historicos"))}
-                                />
-                            </button>
-
+                                onChange={(e) => importarArquivos(e, "historicos")}
+                            />
                             <label htmlFor="file-upload-historico" className="btn-dashboard">
-                                <img src="../src/assets/xls-icon.png" alt="Upload Icon" className="img-btn"/>
+                                <img src="../src/assets/xls-icon.png" alt="Upload Icon" className="img-btn" />
                                 <span className="span-btn-import">Importar</span>
                             </label>
-
                         </div>
+
+                        
                     </div>
 
                     <div className="container-cards-dashboard">
