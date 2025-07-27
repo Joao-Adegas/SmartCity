@@ -8,6 +8,7 @@ import { z } from "zod"
 
 import axios from "axios"
 import Modal from "../../components/Modal/Modal"
+import LoaderCedula from "../../components/LoaderCedula/LoaderCedula"
 import Swal from "sweetalert2"
 
 const schema = z.object({
@@ -25,6 +26,7 @@ export default function Historicos(){
     const [historicos,setHistoricos] = useState([])
     const [editing,isEditing] = useState(false)
     const [modalOpen,setModalOpen] = useState(false)
+    const [loader,setLoader] = useState(false)
     const [editHistorico,SetEditHistorico] = useState(null)
 
     const sensorRef = useRef()
@@ -57,6 +59,7 @@ export default function Historicos(){
     } 
 
     const buscarHistoricos = () => {
+        setLoader(true)
         axios.get("http://127.0.0.1:8000/historico/",{
             headers:{
                 Authorization:`Bearer ${token}`
@@ -65,6 +68,7 @@ export default function Historicos(){
         .then(response => {
             console.log(response.data.results)
             setHistoricos(response.data)
+            setLoader(false)
         })
         .catch(error => {
             if (error.response?.status === 401) {
@@ -204,7 +208,9 @@ export default function Historicos(){
                     </div>
 
                     <div className="container-tabela">
-                            {historicos.length > 0 && (
+                            {loader ? (
+                                <LoaderCedula/>
+                            ):(historicos.length > 0 ? (
                             <ul className="ul-sensores">
                                 {historicos.map(a => (
                                     <li key={a.id} className="li-sensores">
@@ -238,8 +244,10 @@ export default function Historicos(){
                                         </div>
                                     </li>
                                 ))}
-                        
                             </ul>
+                            ):(
+                                <p>Nenhum Histórico Cadastrado</p>
+                            )
                         )}
 
                     </div>

@@ -5,6 +5,7 @@ import GraficoTimestamp from "../../components/GraficoTimestamp/GraficoTimestamp
 
 import axios from 'axios'
 import Swal from "sweetalert2"
+import LoaderNumber from "../../components/LoaderNumber/LoaderNumber"
 
 import { useState,useEffect,useRef } from "react"
 import { useNavigate } from "react-router-dom"
@@ -56,43 +57,6 @@ export default function Dashboard(){
     const valorRef = useRef()
     const timestampRef = useRef()
 
-    const cleanerForm = () => {
-        setTimeout(() => {
-
-            //Sensores
-            if(sensorRef.current)sensorRef.current.value = ''
-            if(mac_addressRef.current)mac_addressRef.current.value = ''
-            if(unidade_medRef.current)unidade_medRef.current.value = ''
-            if(latitudeRef.current)latitudeRef.current.value = ''
-            if(longitudeRef.current)longitudeRef.current.value = ''
-            if(statusRef.current)statusRef.current.value = ''
-
-            //Ambientes
-            if(sigRef.current)sigRef.current.value = ''
-            if(descricaoRef.current)descricaoRef.current.value = ''
-            if(niRef.current)niRef.current.value = ''
-            if(responsavelRef.current)responsavelRef.current.value = ''
-
-            //Históricos
-            if(sensoresRef.current)sensoresRef.current.value = ''
-            if(ambientesRef.current)ambientesRef.current.value = ''
-            if(valorRef.current)valorRef.current.value = ''
-            if(timestampRef.current)timestampRef.current.value = ''
-
-        }, 0);
-    }
-    
-    const openCreateModal = (modal) => {
-        console.log("Modal Aberto")
-        setModalOpen(modal)
-        setTimeout(()=>cleanerForm(),100)
-    }
-    
-    const closeModal = () =>{
-        console.log("Modal fechado")
-        setModalOpen(false)
-    }
-
     const verificacaoToken = (token) => {
 
         if (!token) {
@@ -109,179 +73,15 @@ export default function Dashboard(){
         }
         
     } 
-    
-    const buscarSensores = () => {
-        axios.get("http://127.0.0.1:8000/sensor/",{
-            headers:{
-                Authorization:`Bearer ${token}`
-            }
-        })
-        .then(response => {
-            console.log(response.data.results)
-            setSensores(response.data)
-        })
-        .catch(error => {
-            if (error.response?.status === 401) {
-                Swal.fire({
-                title: 'Seu token expirou',
-                text: 'Faça login novamente.',
-                icon: 'warning',
-                confirmButtonText: 'OK',
-                })
-                .then(() => {
-                    localStorage.removeItem("token");
-                    navigate('/Login');
-                });
-            } else {
-                console.log("Erro ao buscar sensores", error);
-            }
-        })
-    }
-
-    const buscarAmbientes = () => {
-        axios.get("http://127.0.0.1:8000/ambiente/",{
-            headers:{
-                Authorization:`Bearer ${token}`
-            }
-        })
-        .then(response => {
-            console.log(response.data.results)
-            setAmbientes(response.data)
-        })
-        .catch(error => {
-            if (error.response?.status === 401) {
-                Swal.fire({
-                title: 'Seu token expirou',
-                text: 'Faça login novamente.',
-                icon: 'warning',
-                confirmButtonText: 'OK',
-                })
-                .then(() => {
-                    localStorage.removeItem("token");
-                    navigate('/Login');
-                });
-            } else {
-                console.log("Erro ao buscar sensores", error);
-            }
-        })
-    }
-
-    const buscarHistoricos = () => {
-        axios.get("http://127.0.0.1:8000/historico/",{
-            headers:{
-                Authorization:`Bearer ${token}`
-            }
-        })
-        .then(response => {
-            console.log(response.data.results)
-            setHistoricos(response.data)
-        })
-        .catch(error => {
-            if (error.response?.status === 401) {
-                Swal.fire({
-                title: 'Seu token expirou',
-                text: 'Faça login novamente.',
-                icon: 'warning',
-                confirmButtonText: 'OK',
-                })
-                .then(() => {
-                    localStorage.removeItem("token");
-                    navigate('/Login');
-                });
-            } else {
-                console.log("Erro ao buscar sensores", error);
-            }
-        })
-    }
-    
-    const cadatrarSensor = (e) =>{
-        e.preventDefault(); 
-        const formData = {
-            sensor:sensorRef.current.value,
-            mac_address:mac_addressRef.current.value,
-            unidade_med:unidade_medRef.current.value,
-            latitude:latitudeRef.current.value,
-            longitude:longitudeRef.current.value,
-            status:status
-        }
-        
-        axios.post("http://127.0.0.1:8000/sensor/",formData,{
-            headers:{
-                Authorization:`Bearer ${token}`
-            }
-        })
-        .then(response => {
-            buscarSensores()
-            closeModal()
-            contarSensorTemperartura()
-            contarSensorUmidade()
-            contarSensorLuminosidade()
-            contarSensorContagem()
-        })
-        .catch(error =>{
-              console.log("Erro ao cadastrar um sensor",Object.values(error.response.data)?.[0]?.[0] || "Erro inesperado")
-        })
-    }
-
-    const cadastrarAmbiente = (e) =>{
-        e.preventDefault(); 
-        const formData = {
-            sensor:sensorRef.current.value,
-            mac_address:mac_addressRef.current.value,
-            unidade_med:unidade_medRef.current.value,
-            latitude:latitudeRef.current.value,
-            longitude:longitudeRef.current.value,
-            status:status
-        }
-        
-        axios.post("http://127.0.0.1:8000/ambiente/",formData,{
-            headers:{
-                Authorization:`Bearer ${token}`
-            }
-        })
-        .then(response => {
-            buscarAmbientes()
-            closeModal()
-            contarAmbientes()
-        })
-        .catch(error =>{
-            console.log("Erro ao cadastrar um sensor",error)
-        })
-    }
-
-    const cadastrarHistorico = (e) =>{
-        e.preventDefault(); 
-        
-        const formData = {
-            sensor:sensorRef.current.value,
-            mac_address:mac_addressRef.current.value,
-            unidade_med:unidade_medRef.current.value,
-            latitude:latitudeRef.current.value,
-            longitude:longitudeRef.current.value,
-            status:status
-        }
-        
-        axios.post("http://127.0.0.1:8000/historico/",formData,{
-            headers:{
-                Authorization:`Bearer ${token}`
-            }
-        })
-        .then(response => {
-            buscarHistoricos()
-            closeModal()
-            contarHistoricos()
-        })
-        .catch(error =>{
-            console.log("Erro ao cadastrar um sensor",error)
-        })
-    }
 
     const contarAmbientes = () =>{
+        setLoader(false)
         axios.get("http://127.0.0.1:8000/quantidade_ambientes/", {
             headers: { Authorization: `Bearer ${token}` }
         }).then(response => {
             console.log("Ambientes:"+ response.data.quantidade)
             setQuantidadeAmbientes(response.data.quantidade);
+            setLoader(false)
         });
     }
     const contarHistoricos = () =>{
@@ -289,6 +89,7 @@ export default function Dashboard(){
         axios.get("http://127.0.0.1:8000/quantidade_historicos/", {
             headers: { Authorization: `Bearer ${token}` }
         }).then(response => {
+            setLoader(false)
             console.log("Historicos:"+ response.data.quantidade)
             setQuantidadeHistoricos(response.data.quantidade);
         })
@@ -342,6 +143,7 @@ export default function Dashboard(){
         axios.get("http://127.0.0.1:8000/quantidade_sensor_umidade/", {
             headers: { Authorization: `Bearer ${token}` }
         }).then(response => {
+            setLoader(false)
             console.log("Sensores de umidade:" + response.data.umidade)
             setQuantidadeSensorUmidade(response.data.umidade);
         })
@@ -363,6 +165,7 @@ export default function Dashboard(){
             }
         })
     }
+
     const contarSensorLuminosidade = () =>{
         setLoader(true)
         axios.get("http://127.0.0.1:8000/quantidade_sensor_luminosidade/", {
@@ -373,6 +176,7 @@ export default function Dashboard(){
             setQuantidadeSensorLuminosidade(response.data.luminosidade);
         });
     }
+
     const contarSensorContagem = () =>{
         setLoader(true)
         axios.get("http://127.0.0.1:8000/quantidade_sensor_contagem/", {
@@ -540,7 +344,6 @@ export default function Dashboard(){
             <main className="main-dashboard-page">
                 
                 {/* Alerta de processamento */}
-
                 {importando && (
                     <>
                         <div class="loader-overlay">
@@ -579,39 +382,53 @@ export default function Dashboard(){
                         </div>
 
                     </div>
+
+                    {/* MELHORIA FUTURA: TRANSFORMAR ESSE BLOBO DE CODIGO EM UM MAP() */}
                     <div className="container-cards-dashboard">
                         <div className="card">
                             <p className="sensor-p-card">Temperatura</p>
                             <h2 className="sensor-quantity-card">
                                 {loader ? (
-                                    <>
-                                        <div class="relative flex w-64 animate-pulse gap-2 p-4">
-                                        <div class="flex-1">
-                                        <div class="h-12 w-[60%] rounded-lg bg-slate-400 text-sm"></div>
-                                        </div>
-
-                                        </div>
-                                    </>
-                                ): (  quantidadeSensorTemperatura )}
+                                    <LoaderNumber/>
+                                ): ( quantidadeSensorTemperatura )}
                             </h2>
                         </div>
                         <div className="card">
                             <p className="sensor-p-card">Umidade</p>
-                            <h2 className="sensor-quantity-card">{quantidadeSensorUmidade}</h2>
+                           
+                            <h2 className="sensor-quantity-card">
+                                {loader ? (
+                                <LoaderNumber/>
+                                ):(quantidadeSensorUmidade)}
+                            </h2>
                         </div>
+
                         <div className="card">
                             <p className="sensor-p-card">Luminosidade</p>
-                            <h2 className="sensor-quantity-card">{quantidadeSensorLuminosidade}</h2>
+                            <h2 className="sensor-quantity-card">
+                                {loader ? (
+                                    <LoaderNumber/>
+                                ):(
+                                    quantidadeSensorLuminosidade
+                                )}
+                            </h2>
                         </div>
                         <div className="card">
                             <p className="sensor-p-card">Contagem</p>
-                            <h2 className="sensor-quantity-card">{quantidadeSensorContagem}</h2>
+                            <h2 className="sensor-quantity-card">
+                                {loader ? (
+                                    <LoaderNumber/>
+                                ):(
+                                    quantidadeSensorContagem
+                                )}
+                            </h2>
                         </div>
                     </div>
+                    {/* MELHORIA FUTURA: TRANSFORMAR ESSE BLOBO DE CODIGO EM UM MAP() */}
 
                 </div>
 
-                 {/* Container Ambientes */}
+                {/* Container Ambientes */}
                 <div className="container">
                     <div className="top-container">
                         <div className="title-container-dashboard">
@@ -619,7 +436,7 @@ export default function Dashboard(){
                         </div>
                         <div className="options">
                             {/* Botão de exportar */}
-                            <button className="btn-dashboard" onClick={exportarSensores}>
+                            <button className="btn-dashboard" onClick={exportarAmbientes}>
                                 <img src="../src/assets/exel-icon.png" alt="add_icon" className="img-btn" />
                                 Exportar 
                             </button>
@@ -641,7 +458,13 @@ export default function Dashboard(){
                     </div>
                     <div className="container-cards-dashboard">
                         <div className="card">
-                            <h2 className="sensor-quantity-card">{quantidadeAmbientes}</h2>
+                            <h2 className="sensor-quantity-card">
+                                {loader ? (
+                                    <LoaderNumber/>
+                                ):(
+                                    quantidadeAmbientes
+                                )}
+                            </h2>
                         </div>
                     </div>
 
@@ -657,7 +480,7 @@ export default function Dashboard(){
 
                         <div className="options">
                             {/* Botão de exportar */}
-                            <button className="btn-dashboard" onClick={exportarSensores}>
+                            <button className="btn-dashboard" onClick={exportarHistorico}>
                                 <img src="../src/assets/exel-icon.png" alt="add_icon" className="img-btn" />
                                 Exportar 
                             </button>
@@ -682,7 +505,13 @@ export default function Dashboard(){
 
                     <div className="container-cards-dashboard">
                         <div className="card">
-                            <h2 className="sensor-quantity-card">{quantidadeHistoricos}</h2>
+                            <h2 className="sensor-quantity-card">
+                                {loader ? (
+                                    <LoaderNumber/>
+                                ):(
+                                    quantidadeHistoricos
+                                )}
+                            </h2>
                         </div>
                     </div>
 

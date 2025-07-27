@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom"
 import { z } from "zod"
 import axios from 'axios'
 
+import LoaderCedula from "../../components/LoaderCedula/LoaderCedula";
 import Modal from "../../components/Modal/Modal"
 
 const schema = z.object({
@@ -190,7 +191,20 @@ export default function Sensores(){
             buscarSensores()
         })
         .catch(error =>{
-            console.log("Erro ao deletar sensor",error)
+            if (error.response?.status === 401) {
+                Swal.fire({
+                title: 'Seu token expirou',
+                text: 'Faça login novamente.',
+                icon: 'warning',
+                confirmButtonText: 'OK',
+                })
+                .then(() => {
+                    localStorage.removeItem("token");
+                    navigate('/Login');
+                });
+            } else {
+                console.log("Erro ao buscar sensores", error);
+            }
         })
     }
 
@@ -223,15 +237,7 @@ export default function Sensores(){
 
                     <div className="container-tabela">
                     {loader ? (
-                        <div class="skeleton-row">
-                            <div class="skeleton-col skeleton-col-1"></div>
-                            <div class="skeleton-col skeleton-col-2"></div>
-                            <div class="skeleton-col skeleton-col-3"></div>
-                            <div class="skeleton-col skeleton-col-4"></div>
-                            <div class="skeleton-col skeleton-col-5"></div>
-                            <div class="skeleton-col skeleton-col-6"></div>
-                            <div class="skeleton-col skeleton-col-7"></div>
-                        </div>
+                        <LoaderCedula/>
                     ) : (
                         sensores.length > 0 ? (
                         <ul className="ul-sensores">
@@ -359,6 +365,7 @@ export default function Sensores(){
                                 <div className="radio">
 
                                     <input
+                                    className="input-radio"
                                     type="radio"
                                     name="status"
                                     value="ativo"
@@ -369,6 +376,7 @@ export default function Sensores(){
                                     <label htmlFor="">Ativo</label>
 
                                     <input
+                                    className="input-radio"
                                     type="radio"
                                     name="status"
                                     value="inativo"

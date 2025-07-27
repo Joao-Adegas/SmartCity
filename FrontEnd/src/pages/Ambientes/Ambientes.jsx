@@ -5,6 +5,7 @@ import Swal from "sweetalert2"
 import axios from "axios"
 
 import { useNavigate } from "react-router-dom"
+import LoaderCedula from "../../components/LoaderCedula/LoaderCedula";
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useEffect, useState,useRef } from "react"
@@ -29,10 +30,11 @@ export default function Ambientes(){
 
     const [modalOpen,setModalOpen] = useState(false)
     const [editing,isEditing] = useState(false)
+    const [loader,setloader] = useState(false)
     
     const [ambientes,setAmbientes] = useState([])
     const [sensores,setSensores] = useState([])
-
+    
     const sigRef = useRef()
     const descricaoRef =useRef()
     const niRef = useRef()
@@ -64,12 +66,14 @@ export default function Ambientes(){
     } 
 
     const buscarAmbientes = () => {
+            setloader(true)
             axios.get("http://127.0.0.1:8000/ambiente/",{
                 headers:{
                     Authorization:`Bearer ${token}`
                 }
             })
             .then(response => {
+                setloader(false)
                 console.log(Object.values(response.data)?.[0])
                 setAmbientes(response.data)
             })
@@ -82,6 +86,7 @@ export default function Ambientes(){
                     confirmButtonText: 'OK',
                     })
                     .then(() => {
+                        setloader(false)
                         localStorage.removeItem("token");
                         navigate('/Login');
                     });
@@ -178,6 +183,20 @@ export default function Ambientes(){
             buscarAmbientes()
         })
         .catch(error =>{
+            if (error.response?.status === 401) {
+                Swal.fire({
+                title: 'Seu token expirou',
+                text: 'Faça login novamente.',
+                icon: 'warning',
+                confirmButtonText: 'OK',
+                })
+                .then(() => {
+                    localStorage.removeItem("token");
+                    navigate('/Login');
+                });
+            } else {
+                console.log("Erro ao buscar sensores", error);
+            }
             console.log("Erro ao deletar sensor",Object.values(error.response.data)?.[0] || "Erro inesperado")
         })
     }
@@ -209,7 +228,11 @@ export default function Ambientes(){
                     </div>
 
                     <div className="container-tabela">
-                            {ambientes.length > 0 && (
+
+                            {loader ? (
+                                <LoaderCedula/>
+                            ):(
+                            ambientes.length > 0 ? (
                             <ul className="ul-sensores">
                                 {ambientes.map(a => (
                                     <li key={a.id} className="li-sensores">
@@ -244,9 +267,10 @@ export default function Ambientes(){
                                         </div>
                                     </li>
                                 ))}
-                        
                             </ul>
-                        )}
+                        ):(
+                            <p>Nenhum Ambiente Registrado</p>
+                        ))}
 
                     </div>
                 </div>
