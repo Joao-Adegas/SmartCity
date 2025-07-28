@@ -23,7 +23,6 @@ export default function Aside(){
                             <li> <NavLink className={({isActive}) => isActive ? "ativo":"NavLink"}  to="/Sensores">Sensores</NavLink> </li>
                             <li> <NavLink className={({isActive}) => isActive ? "ativo":"NavLink"}  to="/Ambientes">Ambientes</NavLink> </li>
                             <li> <NavLink className={({isActive}) => isActive ? "ativo":"NavLink"}  to="/Históricos">Históricos</NavLink> </li>
-                            <li> <NavLink className={({isActive}) => isActive ? "ativo":"NavLink"}  to="/Usuarios">Usuários</NavLink> </li>
                         </ul>
                     </div>
 

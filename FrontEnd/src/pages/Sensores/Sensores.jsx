@@ -364,27 +364,43 @@ export default function Sensores(){
 
                                 <div className="radio">
 
-                                    <input
-                                    className="input-radio"
-                                    type="radio"
-                                    name="status"
-                                    value="ativo"
-                                    checked={status === true}
-                                    onChange={() => setStatus(true)}
-                                    />
+                                  
+                                    {/* <div class="checkbox-wrapper-46">
+                                        <input type="checkbox" id="cbx-46" class="inp-cbx" />
+                                        <label for="cbx-46" class="cbx"
+                                            ><span>
+                                            <svg viewBox="0 0 12 10" height="10px" width="12px">
+                                                <polyline points="1.5 6 4.5 9 10.5 1"></polyline></svg></span
+                                            ><span>Ativo</span>
+                                        </label>
+                                    </div> */}
 
-                                    <label htmlFor="">Ativo</label>
+                                    <div className="container-input-radio">
+                                          <input
+                                            className="input-radio"
+                                            type="radio"
+                                            name="status"
+                                            value="ativo"
+                                            checked={status === true}
+                                            onChange={() => setStatus(true)}
+                                            />
 
-                                    <input
-                                    className="input-radio"
-                                    type="radio"
-                                    name="status"
-                                    value="inativo"
-                                    checked={status === false}
-                                    onChange={() => setStatus(false)}
-                                    />
+                                            <label htmlFor="">Ativo</label>
+                                    </div>
+                                  
+                                    <div className="container-input-radio">
+                                        <input
+                                        className="input-radio"
+                                        type="radio"
+                                        name="status"
+                                        value="inativo"
+                                        checked={status === false}
+                                        onChange={() => setStatus(false)}
+                                        />
 
-                                    <label htmlFor="">Inativo</label>
+                                        <label htmlFor="">Inativo</label>
+                                    </div>
+                     
                                 </div>
 
                                 <div className="btns-modal">
