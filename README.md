@@ -1,80 +1,62 @@
 <p align="center">
-  <img src="./FrontEnd/src/assets/Logo.png" alt="Logo" width="350" height="350">
+  <img src="./FrontEnd/src/assets/Logo.png" alt="Smart City Logo" width="300">
 </p>
 
-# Smart City
+# 🌆 Smart City Platform
 
+Welcome to **Smart City**, a modern platform designed to manage sensors, environments, and historical data for smart urban spaces. Whether you're tracking temperature 🌡️, humidity 💧, luminosity 💡, or people count 🔢 — this app gives you full CRUD control and a sleek dashboard to visualize it all.
 
-### Platform for managing sensors, environments and history for a smart city. It can perform a complete CRUD of Sensors (temperature 🌡️, humidity💧, luminosity💡 and count🔢), Environments and Histories. The platform comes with a Dashboard for better data visualization.
+---
 
+## 🛠️ Tech Stack
 
-### Technologies used
-### BackEnd
+### 🔙 BackEnd
+Built with the power of:
 
 <p align="center">
-  <img src="https://1000logos.net/wp-content/uploads/2020/08/Django-Logo.png" alt="django-icon" width="120" style="margin-right: 1rem;">
-  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzo4vK4D5nnq7lpwvbWJOzkdPI9Fj3oEHFHg&s" alt="django-icon" width="120" style="margin-right: 1rem;">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/1869px-Python-logo-notext.svg.png" alt="python-icon" width="60"  style="margin-right: 1rem;">
+  <img src="https://1000logos.net/wp-content/uploads/2020/08/Django-Logo.png" alt="Django" width="100">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/1869px-Python-logo-notext.svg.png" alt="Python" width="60">
 </p>
 
-### FrontEnd
+### 🔜 FrontEnd
+Crafted using:
 
 <p align="center">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1150px-React-icon.svg.png" alt="react-icon" width="60" style="margin-right: 40px;">
-  <img src="https://img.icons8.com/fluent/512/vite.png" alt="vite-icon" width="60" style="margin-right: 40px;">
-  <img src="https://img.icons8.com/color/512/sass.png" alt="sass-icon" width="60">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1150px-React-icon.svg.png" alt="React" width="60">
+  <img src="https://img.icons8.com/fluent/512/vite.png" alt="Vite" width="60">
+  <img src="https://img.icons8.com/color/512/sass.png" alt="Sass" width="60">
 </p>
 
+---
 
+## 🚀 Getting Started
 
+Let’s get your Smart City up and running!
 
+### 🧩 1. Start the BackEnd
 
-### How to start the project
+```bash
+# Navigate to the backend folder
+cd ./SmartCity/BackEnd
 
+# Create a virtual environment
+python -m venv env
 
-### 1. start BackEnd
-### 1.1 Enter the BackEnd folder:
-    cd ./SmartCity/BackEnd
+# Activate the environment
+# On Windows:
+./env/Scripts/activate
+# On macOS/Linux:
+source env/bin/activate
 
-### 1.2 Install the virtual environment:
-    python -m venv env
+# Install dependencies
+pip install -r requirements.txt
 
-### 1.3 Start the virtual environment:
-    ./env/Scripts/activate
+# Create an admin user
+python manage.py createsuperuser
 
-### 1.4 install the libraries from requirements.txt
-    pip install -r requirements.txt
+# Apply migrations
+python manage.py makemigrations
+python manage.py migrate
 
-### 1.5 Create a super user (admin)
-    python manage.py createsuperuser
-
-### 1.6 Update the db.sqlite3 database
-    python manage.py makemigrations
-    python manage.py migrate
-
-### 1.7 Start BackEnd
-    python manage.py runserver
-
-### Backend is running, now go back to the root of the project
-    cd..
-    cd..
-
-### 2. Start FrontEnd
-### 2.1 Enter the FrontEnd folder
-    ./SmartCity/FrontEnd
-
-### Install the Libraries used
-    npm i
-
-### Start the FrontEnd in React
-    npm run dev
-
-### The project is running! Now click on the link provided in the terminal.
-
-    
-
-### Django API documentation link 
-https://documenter.getpostman.com/view/21570052/2sB2xBDpx8
-
-### Link Documentação Project
-https://docs.google.com/document/d/1VO-hmSUhJF6IImUhMjrjvHk8TlAjtL2VxpymGZPjZlE/edit?tab=t.0
+# Start the server
+python manage.py runserver
